@@ -1,0 +1,15 @@
+{
+  "/api/books/bulk-import/route": "app/api/books/bulk-import/route.js",
+  "/api/books/popular/route": "app/api/books/popular/route.js",
+  "/api/books/search/route": "app/api/books/search/route.js",
+  "/api/reading-goals/route": "app/api/reading-goals/route.js",
+  "/api/recommendations/route": "app/api/recommendations/route.js",
+  "/api/statistics/route": "app/api/statistics/route.js",
+  "/api/users/books/route": "app/api/users/books/route.js",
+  "/auth/signin/page": "app/auth/signin/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/discover/page": "app/discover/page.js",
+  "/import-books/page": "app/import-books/page.js",
+  "/my-books/page": "app/my-books/page.js",
+  "/page": "app/page.js"
+}

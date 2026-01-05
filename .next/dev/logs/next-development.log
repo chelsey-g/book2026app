@@ -1,0 +1,211 @@
+[00:00:00.536] Server  LOG     ✓ Ready in 382ms
+[00:00:09.824] Server  ERROR   ⨯ Error: supabaseUrl is required.
+[00:00:09.833] Server  LOG     ○ Compiling /dashboard ...
+[00:00:10.031] Server  ERROR   ⨯ Error: supabaseUrl is required.
+[00:00:10.181] Server  ERROR   ⨯ Error: supabaseUrl is required.
+[00:00:10.727] Browser ERROR   uncaughtError: Error: supabaseUrl is required.
+[00:05:06.358] Server  ERROR   ⨯ Error: supabaseUrl is required.
+[00:05:06.838] Browser ERROR   uncaughtError: Error: supabaseUrl is required.
+[00:05:23.590] Server  LOG       Reload env: .env.local
+[00:05:23.854] Server  ERROR   ⨯ Error: supabaseUrl is required.
+[00:05:24.284] Browser ERROR   uncaughtError: Error: supabaseUrl is required.
+[00:05:32.731] Server  LOG       Reload env: .env.local
+[00:05:33.041] Server  LOG     ✓ Compiled in 256ms
+[00:05:33.229] Server  ERROR   ⨯ Error: Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.
+[00:05:33.235] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:05:33.235] Server  WARN    ⚠ Fast Refresh had to perform a full reload when ./book-tracker-app/src/lib/supabase/client.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:05:33.235] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:05:33.386] Server  ERROR   ⨯ Error: Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.
+[00:05:34.284] Browser ERROR   uncaughtError: Error: Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.
+[00:05:39.029] Server  LOG       Reload env: .env.local
+[00:05:39.082] Server  LOG     ✓ Compiled in 6ms
+[00:05:39.118] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:05:39.118] Server  WARN    ⚠ Fast Refresh had to perform a full reload when ./book-tracker-app/src/lib/supabase/client.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:05:39.118] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:06:05.766] Server  LOG       Reload env: .env.local
+[00:06:05.839] Server  LOG     ✓ Compiled in 22ms
+[00:06:06.283] Browser WARN    GoTrueClient@sb-ipyvwuvdtpefyplpfdjr-auth-token:1 (2.89.0) 2026-01-05T14:51:47.150Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+[00:13:23.001] Server  ERROR   Error inserting book: {}
+[00:13:23.001] Server  ERROR   Failed to add book: "Failed to create book: new row violates row-level security policy for table \"books\""
+[00:13:26.238] Browser ERROR   Add book error: Failed to add book: Failed to create book: new row violates row-level security policy for table "books"
+[00:23:16.113] Server  ERROR   (node:4427) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[00:23:37.504] Browser LOG     📤 Sending books to import: [{"author":"Freida McFadden","cover":"https://covers.openlibrary.org/b/id/15096889-M.jpg","dateFinished":"January 3rd","dateStarted":"January 3rd","name":"Do Not Disturb","rating":3,"status":"READ","type":"Kindle"},{"author":"Freida McFadden","dateFinished":"January 3rd","dateStarted":"January 3rd","name":"The Gift","rating":2,"status":"READ","type":"Kindle"},{"author":"Freida McFadden","cover":"https://covers.openlibrary.org/b/id/14840898-M.jpg","dateFinished":"January 3rd","dateStarted":"January 3rd","name":"The Housemaid’s Wedding","rating":2,"status":"READ","type":"Kindle"},{"author":"Sarah J. Maas","cover":"https://covers.openlibrary.org/b/id/10643508-M.jpg","dateFinished":"January 23rd","dateStarted":"January 5th","name":"A Court Of Silver Flames","rating":3,"status":"READ","type":"Owned Book"},{"author":"Angie Hockman","cover":"https://covers.openlibrary.org/b/id/12866547-M.jpg","dateFinished":"January 28th","dateStarted":"January 26th","name":"Dream On","rating":2,"status":"READ","type":"Owned Book"},{"author":"Megan Lally","cover":"https://covers.openlibrary.org/b/id/15155355-M.jpg","dateFinished":"January 30th","dateStarted":"January 29th","name":"That’s Not My Name","rating":3,"status":"READ","type":"Owned Book"},{"author":"Tillie Cole","cover":"https://covers.openlibrary.org/b/id/14428296-M.jpg","dateFinished":"February 4th","dateStarted":"February 1st","name":"A Thousand Boy Kisses","rating":3,"status":"READ","type":"Shelby’s Book"},{"author":"Tillie Cole","cover":"https://covers.openlibrary.org/b/id/15149534-M.jpg","dateFinished":"February 15th","dateStarted":"February 4th","name":"A Thousand Broken Pieces","rating":3,"status":"READ","type":"Shelby’s Book"},{"author":"Katrina Kwan","cover":"http://books.google.com/books/content?id=o98GEQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api","dateFinished":"February 19th","dateStarted":"February 16th","name":"Knives, Seasoning, And a Dash of Love","rating":3,"status":"READ","type":"Owned Book"},{"author":"Jamie Day","cover":"http://books.google.com/books/content?id=Y7KiEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api","dateFinished":"February 26th","dateStarted":"February 20th","name":"The Block Party","rating":4,"status":"READ","type":"Owned Book"},{"author":"Sally Thorne","cover":"https://covers.openlibrary.org/b/id/11580072-M.jpg","dateFinished":"March 2nd","dateStarted":"February 26th","name":"Second First Impressions","rating":2,"status":"READ","type":"Owned Book"},{"author":"Sally Rooney","cover":"https://covers.openlibrary.org/b/id/8794265-M.jpg","dateFinished":"March 25th","dateStarted":"March 3rd","name":"Normal People","rating":3,"status":"READ","type":"TIm’s Book"},{"author":"Carley Fortune","cover":"https://covers.openlibrary.org/b/id/13244078-M.jpg","dateFinished":"April 6th","dateStarted":"March 26th","name":"Meet Me At The Lake","rating":3,"status":"READ","type":"Shelby’s Book"},{"author":"Kiersten Modglin","cover":null,"dateFinished":"April 7th","dateStarted":"April 7th","name":"Do Not Open","rating":2,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":"https://covers.openlibrary.org/b/id/11508399-M.jpg","dateFinished":"April 26th","dateStarted":"April 8th","name":"The Missing","rating":3,"status":"READ","type":"Owned Book"},{"author":"Emily Henry","cover":"https://covers.openlibrary.org/b/id/10476782-M.jpg","dateFinished":"May 7th","dateStarted":"April 27th","name":"People We Meet On Vacation","rating":5,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":null,"dateFinished":"May 12th","dateStarted":"May 7th","name":"The Stranger","rating":2,"status":"READ","type":"Owned Book"},{"author":"Penelope Douglas","cover":"https://covers.openlibrary.org/b/id/14632017-M.jpg","dateFinished":"July 27th","dateStarted":"July 13th","name":"Five Brothers","rating":4,"status":"READ","type":"Owned Book"},{"author":"Freida McFadden","cover":"https://covers.openlibrary.org/b/id/14652484-M.jpg","dateFinished":"May 18th","dateStarted":"May 17th","name":"The Perfect Son","rating":3,"status":"READ","type":"Kindle"},{"author":"Freida McFadden","cover":"https://covers.openlibrary.org/b/id/13156268-M.jpg","dateFinished":"May 19th","dateStarted":"May 17th","name":"The Locked Door","rating":4,"status":"READ","type":"Kindle"},{"author":"Penelope Douglas","cover":"https://covers.openlibrary.org/b/id/12384855-M.jpg","dateFinished":"May 31st","dateStarted":"May 21st","name":"Tryst Six Venom","rating":3,"status":"READ","type":"Owned Book"},{"author":"Callie Hart","cover":"https://covers.openlibrary.org/b/id/15146293-M.jpg","dateFinished":"June 20th","dateStarted":"June 1st","name":"Quicksilver","rating":3,"status":"READ","type":"Owned Book"},{"author":"Ali Hazelwood","cover":"https://covers.openlibrary.org/b/id/13264824-M.jpg","dateFinished":"June 22nd","dateStarted":"June 21st","name":"Love, Theoretically","rating":4,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":"http://books.google.com/books/content?id=NyKxzgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api","dateFinished":"June 22nd","dateStarted":"June 22nd","name":"The Liar’s Wife","rating":3,"status":"READ","type":"Owned Book"},{"author":"Delia Owens","cover":"https://covers.openlibrary.org/b/id/8362947-M.jpg","dateFinished":"July 12th","dateStarted":"July 1st","name":"Where The Crawdads Sing","rating":4,"status":"READ","type":"Owned Book"},{"author":"Freida McFadden","cover":"https://covers.openlibrary.org/b/id/15125037-M.jpg","dateFinished":"July 30th","dateStarted":"July 28th","name":"The Crash","rating":3,"status":"READ","type":"Owned Book"},{"author":"Lisa Jewell","cover":"https://covers.openlibrary.org/b/id/10139078-M.jpg","dateFinished":"August 14th","dateStarted":"August 1st","name":"Then She Was Gone","rating":4,"status":"READ","type":"Owned Book"},{"author":"Abby Jimenez","cover":"https://covers.openlibrary.org/b/id/14602781-M.jpg","dateFinished":"August 27th","dateStarted":"August 15th","name":"Just For The Summer","rating":4,"status":"READ","type":"Owner Book"},{"author":"Navessa Allen","cover":"https://covers.openlibrary.org/b/id/14641117-M.jpg","dateFinished":"August 30th","dateStarted":"August 30th","name":"Lights Out","rating":3,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":"http://books.google.com/books/content?id=nPndwwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api","dateFinished":"September 5th","dateStarted":"September 4th","name":"The List","rating":1,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":"https://covers.openlibrary.org/b/id/13200892-M.jpg","dateFinished":"September 13th","dateStarted":"September 13th","name":"The Family Secret","rating":4,"status":"READ","type":"Owned Book"},{"author":"Sophie Lark","cover":null,"dateFinished":"September 13th","dateStarted":"September 13th","name":"There Are No Saints","rating":4,"status":"READ","type":"Owned Book"},{"author":"Sophie Lark","cover":"https://covers.openlibrary.org/b/id/13229119-M.jpg","dateFinished":"September 15th","dateStarted":"September 15th","name":"There Is No Devil","rating":3,"status":"READ","type":"Owned Book"},{"author":"Emily Henry","cover":"https://covers.openlibrary.org/b/id/14625690-M.jpg","dateFinished":"September 24th","dateStarted":"September 16th","name":"Funny Story","rating":3,"status":"READ","type":"Owned Book"},{"author":"Lisa Jewell","cover":"https://covers.openlibrary.org/b/id/13300169-M.jpg","dateFinished":"October 4th","dateStarted":"September 26th","name":"None Of This Is True","rating":4,"status":"READ","type":"Owned Book"},{"author":"Kaylie Smith","cover":"https://covers.openlibrary.org/b/id/14842920-M.jpg","dateFinished":"November 16th","dateStarted":"October 6th","name":"Phantasma","rating":3,"status":"READ","type":"Owned Book"},{"author":"Natasha Preston","cover":null,"dateFinished":"November 26th","dateStarted":"November 17th","name":"The Cabin","rating":3,"status":"READ","type":"Owned Book"},{"author":"Riley Sager","cover":"https://covers.openlibrary.org/b/id/12802833-M.jpg","dateFinished":"November 29th","dateStarted":"November 28th","name":"The House Across The Lake","rating":4,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":"http://books.google.com/books/content?id=VMj30AEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api","dateFinished":"December 3rd","dateStarted":"December 2nd","name":"Where The Darkness Goes","rating":3,"status":"READ","type":"Owned Book"},{"author":"Emily Henry","cover":"https://covers.openlibrary.org/b/id/9426296-M.jpg","dateFinished":"December 17th","dateStarted":"December 11th","name":"Beach Read","rating":3,"status":"READ","type":"Owned Book"},{"author":"Sophia Jomain","cover":"http://books.google.com/books/content?id=vVtFEQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api","dateFinished":"December 24th","dateStarted":"December 1st","name":"A Heart For Christmas","rating":2,"status":"READ","type":"Owned Book"},{"author":"Navessa Allen","cover":"https://covers.openlibrary.org/b/id/15093928-M.jpg","dateFinished":"December 26th","dateStarted":"December 18th","name":"Caught Up","rating":3,"status":"READ","type":"Owned Book"},{"author":"Kiersten Modglin","cover":"https://covers.openlibrary.org/b/id/12361185-M.jpg","dateFinished":"December 28th","dateStarted":"December 27th","name":"Missing Daughter","rating":3,"status":"READ","type":"Owned Book"}]
+[00:23:37.504] Browser LOG     📤 Auth token: eyJhbGciOiJFUzI1NiIs...
+[00:23:37.853] Server  LOG     📥 Received books to import: 43
+[00:23:37.854] Server  LOG     📥 First book: {}
+[00:23:37.854] Server  LOG     👤 User ID: "b9e1514c-a8b7-4769-b805-ffba057d8849"
+[00:23:37.854] Server  LOG     🔍 Processing: "Do Not Disturb" by "Freida McFadden"
+[00:23:38.124] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Do%20Not%20Disturb&author=Freida%20McFadden
+[00:23:38.533] Server  LOG     ✅ Book created/found with ID: 23e5df8a-d0c3-49f2-8055-448ad24883a7
+[00:23:38.899] Server  LOG     ✅ User-book entry created
+[00:23:38.899] Server  LOG     🔍 Processing: "The Gift" by "Freida McFadden"
+[00:23:39.096] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Gift&author=Freida%20McFadden
+[00:23:39.241] Server  LOG     ✅ Book created/found with ID: 100bec2e-ae9b-4cfd-ae1f-b881b82e4428
+[00:23:39.552] Server  LOG     ✅ User-book entry created
+[00:23:39.552] Server  LOG     🔍 Processing: "The Housemaid’s Wedding" by "Freida McFadden"
+[00:23:39.777] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Housemaid%E2%80%99s%20Wedding&author=Freida%20McFadden
+[00:23:39.901] Server  LOG     ✅ Book created/found with ID: 8e33f8ba-a1bc-4173-a9f7-12bbd185272f
+[00:23:40.179] Server  LOG     ✅ User-book entry created
+[00:23:40.179] Server  LOG     🔍 Processing: "A Court Of Silver Flames" by "Sarah J. Maas"
+[00:23:40.397] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=A%20Court%20Of%20Silver%20Flames&author=Sarah%20J.%20Maas
+[00:23:40.532] Server  LOG     ✅ Book created/found with ID: 1fd5e8d6-4f33-4ae8-88b5-db7edfc0f9f7
+[00:23:40.811] Server  LOG     ✅ User-book entry created
+[00:23:40.812] Server  LOG     🔍 Processing: "Dream On" by "Angie Hockman"
+[00:23:41.017] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Dream%20On&author=Angie%20Hockman
+[00:23:41.146] Server  LOG     ✅ Book created/found with ID: 575159d5-7017-48b8-ae6f-a856aaee3b11
+[00:23:41.400] Server  LOG     ✅ User-book entry created
+[00:23:41.401] Server  LOG     🔍 Processing: "That’s Not My Name" by "Megan Lally"
+[00:23:41.595] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=That%E2%80%99s%20Not%20My%20Name&author=Megan%20Lally
+[00:23:41.722] Server  LOG     ✅ Book created/found with ID: 1371c036-7e87-4efe-86b8-1c9a583afc11
+[00:23:41.977] Server  LOG     ✅ User-book entry created
+[00:23:41.977] Server  LOG     🔍 Processing: "A Thousand Boy Kisses" by "Tillie Cole"
+[00:23:42.162] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=A%20Thousand%20Boy%20Kisses&author=Tillie%20Cole
+[00:23:42.292] Server  LOG     ✅ Book created/found with ID: 5c5cd0b9-9aee-41d8-8918-7651b4fdd48a
+[00:23:42.562] Server  LOG     ✅ User-book entry created
+[00:23:42.562] Server  LOG     🔍 Processing: "A Thousand Broken Pieces" by "Tillie Cole"
+[00:23:42.764] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=A%20Thousand%20Broken%20Pieces&author=Tillie%20Cole
+[00:23:42.903] Server  LOG     ✅ Book created/found with ID: 69c5c915-dd56-4997-a183-65fd773a863d
+[00:23:43.172] Server  LOG     ✅ User-book entry created
+[00:23:43.173] Server  LOG     🔍 Processing: "Knives, Seasoning, And a Dash of Love" by "Katrina Kwan"
+[00:23:43.360] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Knives%2C%20Seasoning%2C%20And%20a%20Dash%20of%20Love&author=Katrina%20Kwan
+[00:23:43.492] Server  LOG     ✅ Book created/found with ID: 031b0517-d5af-4ee6-8d0a-7e40b4673cd5
+[00:23:43.749] Server  LOG     ✅ User-book entry created
+[00:23:43.749] Server  LOG     🔍 Processing: "The Block Party" by "Jamie Day"
+[00:23:43.950] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Block%20Party&author=Jamie%20Day
+[00:23:44.091] Server  LOG     ✅ Book created/found with ID: 343d1840-02f6-4bb8-9fa1-5829d5e6074f
+[00:23:44.360] Server  LOG     ✅ User-book entry created
+[00:23:44.360] Server  LOG     🔍 Processing: "Second First Impressions" by "Sally Thorne"
+[00:23:44.556] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Second%20First%20Impressions&author=Sally%20Thorne
+[00:23:44.721] Server  LOG     ✅ Book created/found with ID: d117d2bc-192c-476a-b449-a7eeef57ec84
+[00:23:45.293] Server  LOG     ✅ User-book entry created
+[00:23:45.293] Server  LOG     🔍 Processing: "Normal People" by "Sally Rooney"
+[00:23:45.485] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Normal%20People&author=Sally%20Rooney
+[00:23:45.615] Server  LOG     ✅ Book created/found with ID: afb66b9c-dfe8-4a3f-9ec2-f42fb55bda8c
+[00:23:45.869] Server  LOG     ✅ User-book entry created
+[00:23:45.869] Server  LOG     🔍 Processing: "Meet Me At The Lake" by "Carley Fortune"
+[00:23:46.067] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Meet%20Me%20At%20The%20Lake&author=Carley%20Fortune
+[00:23:46.208] Server  LOG     ✅ Book created/found with ID: c773a256-a0a9-463c-b112-634c066127d5
+[00:23:46.474] Server  LOG     ✅ User-book entry created
+[00:23:46.474] Server  LOG     🔍 Processing: "Do Not Open" by "Kiersten Modglin"
+[00:23:46.668] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Do%20Not%20Open&author=Kiersten%20Modglin
+[00:23:46.818] Server  LOG     ✅ Book created/found with ID: 4f8f25bf-7bc2-4ffa-bf7c-5d05d8af94bb
+[00:23:47.081] Server  LOG     ✅ User-book entry created
+[00:23:47.082] Server  LOG     🔍 Processing: "The Missing" by "Kiersten Modglin"
+[00:23:47.277] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Missing&author=Kiersten%20Modglin
+[00:23:47.403] Server  LOG     ✅ Book created/found with ID: e227d2ce-c81a-4911-b0a8-665107303081
+[00:23:47.669] Server  LOG     ✅ User-book entry created
+[00:23:47.669] Server  LOG     🔍 Processing: "People We Meet On Vacation" by "Emily Henry"
+[00:23:47.860] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=People%20We%20Meet%20On%20Vacation&author=Emily%20Henry
+[00:23:47.990] Server  LOG     ✅ Book created/found with ID: ff48d305-2c05-4ebf-a155-427c3902a166
+[00:23:48.270] Server  LOG     ✅ User-book entry created
+[00:23:48.270] Server  LOG     🔍 Processing: "The Stranger" by "Kiersten Modglin"
+[00:23:48.464] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Stranger&author=Kiersten%20Modglin
+[00:23:48.588] Server  LOG     ✅ Book created/found with ID: 2a5c633f-bb3c-4a76-9158-a0d10f3f2951
+[00:23:48.839] Server  LOG     ✅ User-book entry created
+[00:23:48.840] Server  LOG     🔍 Processing: "Five Brothers" by "Penelope Douglas"
+[00:23:49.025] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Five%20Brothers&author=Penelope%20Douglas
+[00:23:49.152] Server  LOG     ✅ Book created/found with ID: 058fe7b1-2bf9-409b-8261-dbe2c5ac93ec
+[00:23:49.411] Server  LOG     ✅ User-book entry created
+[00:23:49.411] Server  LOG     🔍 Processing: "The Perfect Son" by "Freida McFadden"
+[00:23:49.598] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Perfect%20Son&author=Freida%20McFadden
+[00:23:49.726] Server  LOG     ✅ Book created/found with ID: ff2b1794-c67a-4d95-a86a-9e7c6b1740f1
+[00:23:49.993] Server  LOG     ✅ User-book entry created
+[00:23:49.993] Server  LOG     🔍 Processing: "The Locked Door" by "Freida McFadden"
+[00:23:50.198] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Locked%20Door&author=Freida%20McFadden
+[00:23:50.350] Server  LOG     ✅ Book created/found with ID: 0cf558b3-ab0f-4655-8ca2-be698a740129
+[00:23:50.611] Server  LOG     ✅ User-book entry created
+[00:23:50.612] Server  LOG     🔍 Processing: "Tryst Six Venom" by "Penelope Douglas"
+[00:23:50.800] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Tryst%20Six%20Venom&author=Penelope%20Douglas
+[00:23:50.960] Server  LOG     ✅ Book created/found with ID: 1f9322ff-505b-49c3-a252-3866b03b8728
+[00:23:51.235] Server  LOG     ✅ User-book entry created
+[00:23:51.235] Server  LOG     🔍 Processing: "Quicksilver" by "Callie Hart"
+[00:23:51.433] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Quicksilver&author=Callie%20Hart
+[00:23:51.561] Server  LOG     ✅ Book created/found with ID: 703475b2-b372-4356-9904-f3a79ee57c39
+[00:23:51.831] Server  LOG     ✅ User-book entry created
+[00:23:51.831] Server  LOG     🔍 Processing: "Love, Theoretically" by "Ali Hazelwood"
+[00:23:52.027] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Love%2C%20Theoretically&author=Ali%20Hazelwood
+[00:23:52.181] Server  LOG     ✅ Book created/found with ID: 7d3f258f-f31d-43dc-9a93-397be6960b4c
+[00:23:52.441] Server  LOG     ✅ User-book entry created
+[00:23:52.441] Server  LOG     🔍 Processing: "The Liar’s Wife" by "Kiersten Modglin"
+[00:23:52.631] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Liar%E2%80%99s%20Wife&author=Kiersten%20Modglin
+[00:23:52.781] Server  LOG     ✅ Book created/found with ID: e3f63b0f-6f3d-4c1b-b9f8-1220aef2fb4f
+[00:23:53.045] Server  LOG     ✅ User-book entry created
+[00:23:53.045] Server  LOG     🔍 Processing: "Where The Crawdads Sing" by "Delia Owens"
+[00:23:53.240] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Where%20The%20Crawdads%20Sing&author=Delia%20Owens
+[00:23:53.371] Server  LOG     ✅ Book created/found with ID: 806c0511-66ac-4223-9078-75c88d029c0c
+[00:23:53.647] Server  LOG     ✅ User-book entry created
+[00:23:53.648] Server  LOG     🔍 Processing: "The Crash" by "Freida McFadden"
+[00:23:53.851] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Crash&author=Freida%20McFadden
+[00:23:53.981] Server  LOG     ✅ Book created/found with ID: b10df216-d52d-44d1-9d2b-8bfbc029eaec
+[00:23:54.242] Server  LOG     ✅ User-book entry created
+[00:23:54.243] Server  LOG     🔍 Processing: "Then She Was Gone" by "Lisa Jewell"
+[00:23:54.449] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Then%20She%20Was%20Gone&author=Lisa%20Jewell
+[00:23:54.581] Server  LOG     ✅ Book created/found with ID: 8658692d-a160-4986-8792-9e85636b099d
+[00:23:54.908] Server  LOG     ✅ User-book entry created
+[00:23:54.908] Server  LOG     🔍 Processing: "Just For The Summer" by "Abby Jimenez"
+[00:23:55.121] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Just%20For%20The%20Summer&author=Abby%20Jimenez
+[00:23:55.251] Server  LOG     ✅ Book created/found with ID: 47334440-2daf-486b-9c3f-cce520e3ad50
+[00:23:55.516] Server  LOG     ✅ User-book entry created
+[00:23:55.516] Server  LOG     🔍 Processing: "Lights Out" by "Navessa Allen"
+[00:23:55.725] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Lights%20Out&author=Navessa%20Allen
+[00:23:55.855] Server  LOG     ✅ Book created/found with ID: aaa536b3-89f1-45f9-be84-991bad672067
+[00:23:56.129] Server  LOG     ✅ User-book entry created
+[00:23:56.129] Server  LOG     🔍 Processing: "The List" by "Kiersten Modglin"
+[00:23:56.327] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20List&author=Kiersten%20Modglin
+[00:23:56.467] Server  LOG     ✅ Book created/found with ID: 9dd63275-3c83-4879-977e-42c12cb96c3a
+[00:23:56.738] Server  LOG     ✅ User-book entry created
+[00:23:56.738] Server  LOG     🔍 Processing: "The Family Secret" by "Kiersten Modglin"
+[00:23:56.928] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Family%20Secret&author=Kiersten%20Modglin
+[00:23:57.056] Server  LOG     ✅ Book created/found with ID: 70307220-97e3-40fe-b8d8-1ea2377ee49d
+[00:23:57.317] Server  LOG     ✅ User-book entry created
+[00:23:57.317] Server  LOG     🔍 Processing: "There Are No Saints" by "Sophie Lark"
+[00:23:57.516] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=There%20Are%20No%20Saints&author=Sophie%20Lark
+[00:23:57.641] Server  LOG     ✅ Book created/found with ID: b64e97b2-7aee-465a-9f10-ae3248d1c920
+[00:23:57.919] Server  LOG     ✅ User-book entry created
+[00:23:57.919] Server  LOG     🔍 Processing: "There Is No Devil" by "Sophie Lark"
+[00:23:58.119] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=There%20Is%20No%20Devil&author=Sophie%20Lark
+[00:23:58.246] Server  LOG     ✅ Book created/found with ID: 2d966125-8601-4136-a6d5-b22fbe3fed1b
+[00:23:58.503] Server  LOG     ✅ User-book entry created
+[00:23:58.503] Server  LOG     🔍 Processing: "Funny Story" by "Emily Henry"
+[00:23:58.711] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Funny%20Story&author=Emily%20Henry
+[00:23:58.869] Server  LOG     ✅ Book created/found with ID: b3a50e5e-a618-44f8-bb56-929dd2d45b32
+[00:23:59.132] Server  LOG     ✅ User-book entry created
+[00:23:59.133] Server  LOG     🔍 Processing: "None Of This Is True" by "Lisa Jewell"
+[00:23:59.335] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=None%20Of%20This%20Is%20True&author=Lisa%20Jewell
+[00:23:59.472] Server  LOG     ✅ Book created/found with ID: 657732ef-15c2-4297-9f9e-6993c450ce8f
+[00:23:59.731] Server  LOG     ✅ User-book entry created
+[00:23:59.732] Server  LOG     🔍 Processing: "Phantasma" by "Kaylie Smith"
+[00:23:59.926] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Phantasma&author=Kaylie%20Smith
+[00:24:00.056] Server  LOG     ✅ Book created/found with ID: 758c1525-7166-45cf-9e79-5605b5f0aac7
+[00:24:00.312] Server  LOG     ✅ User-book entry created
+[00:24:00.313] Server  LOG     🔍 Processing: "The Cabin" by "Natasha Preston"
+[00:24:00.520] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20Cabin&author=Natasha%20Preston
+[00:24:00.647] Server  LOG     ✅ Book created/found with ID: cbbb4014-8827-4acd-9337-a7b043055cf2
+[00:24:00.903] Server  LOG     ✅ User-book entry created
+[00:24:00.903] Server  LOG     🔍 Processing: "The House Across The Lake" by "Riley Sager"
+[00:24:01.103] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=The%20House%20Across%20The%20Lake&author=Riley%20Sager
+[00:24:01.230] Server  LOG     ✅ Book created/found with ID: 86d9f4de-725e-4ef9-b761-b1c8d1a44229
+[00:24:01.499] Server  LOG     ✅ User-book entry created
+[00:24:01.499] Server  LOG     🔍 Processing: "Where The Darkness Goes" by "Kiersten Modglin"
+[00:24:01.695] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Where%20The%20Darkness%20Goes&author=Kiersten%20Modglin
+[00:24:01.819] Server  LOG     ✅ Book created/found with ID: a2d96760-9436-4a98-a8f2-ff8066fea7cc
+[00:24:02.080] Server  LOG     ✅ User-book entry created
+[00:24:02.080] Server  LOG     🔍 Processing: "Beach Read" by "Emily Henry"
+[00:24:02.288] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Beach%20Read&author=Emily%20Henry
+[00:24:02.409] Server  LOG     ✅ Book created/found with ID: 44e11a2a-b98c-4b5a-a3a4-37b51d4dc027
+[00:24:02.678] Server  LOG     ✅ User-book entry created
+[00:24:02.678] Server  LOG     🔍 Processing: "A Heart For Christmas" by "Sophia Jomain"
+[00:24:02.878] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=A%20Heart%20For%20Christmas&author=Sophia%20Jomain
+[00:24:03.013] Server  LOG     ✅ Book created/found with ID: df693cec-e467-485f-96af-1cf0ffd007b4
+[00:24:03.266] Server  LOG     ✅ User-book entry created
+[00:24:03.267] Server  LOG     🔍 Processing: "Caught Up" by "Navessa Allen"
+[00:24:03.457] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Caught%20Up&author=Navessa%20Allen
+[00:24:03.587] Server  LOG     ✅ Book created/found with ID: ec058e97-0e37-43f5-b05a-15e1a9e00eb8
+[00:24:03.844] Server  LOG     ✅ User-book entry created
+[00:24:03.845] Server  LOG     🔍 Processing: "Missing Daughter" by "Kiersten Modglin"
+[00:24:04.031] Server  ERROR   Error searching book API: TypeError: Failed to parse URL from undefined/api/books/search?title=Missing%20Daughter&author=Kiersten%20Modglin
+[00:24:04.177] Server  LOG     ✅ Book created/found with ID: af77d780-6e21-42d5-b717-f0672f432071
+[00:24:04.438] Server  LOG     ✅ User-book entry created
+[00:24:04.438] Server  LOG     📊 Import complete: 43/43 succeeded
+[00:24:07.041] Browser LOG     📥 Response: {"data":{"errors":[],"importedCount":43,"success":true,"totalBooks":43},"status":200}
