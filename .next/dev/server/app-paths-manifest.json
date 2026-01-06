@@ -1,8 +1,0 @@
-{
-  "/api/profile-picture/route": "app/api/profile-picture/route.js",
-  "/api/reading-goals/route": "app/api/reading-goals/route.js",
-  "/api/statistics/route": "app/api/statistics/route.js",
-  "/api/users/books/route": "app/api/users/books/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/profile/page": "app/profile/page.js"
-}
