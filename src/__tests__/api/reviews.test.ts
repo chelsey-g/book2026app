@@ -61,7 +61,8 @@ describe('Reviews API', () => {
   describe('POST /api/reviews', () => {
     it('returns 401 for unauthorized user', async () => {
       const { supabase } = await import('@/lib/supabase/client');
-      (supabase.auth.getUser as any).mockResolvedValue({ 
+      const mockGetUser = supabase.auth.getUser as unknown as ReturnType<typeof vi.fn>;
+      mockGetUser.mockResolvedValue({ 
         data: { user: null }, 
         error: new Error('Unauthorized') 
       });
@@ -80,7 +81,8 @@ describe('Reviews API', () => {
 
     it('validates rating is between 1 and 5', async () => {
       const { supabase } = await import('@/lib/supabase/client');
-      (supabase.auth.getUser as any).mockResolvedValue({ 
+      const mockGetUser = supabase.auth.getUser as unknown as ReturnType<typeof vi.fn>;
+      mockGetUser.mockResolvedValue({ 
         data: { user: { id: 'user-1' } }, 
         error: null 
       });

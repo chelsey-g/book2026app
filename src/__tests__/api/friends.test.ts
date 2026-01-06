@@ -31,7 +31,8 @@ describe('Friends API', () => {
   describe('GET /api/friends', () => {
     it('returns 401 for unauthorized user', async () => {
       const { supabase } = await import('@/lib/supabase/client');
-      (supabase.auth.getUser as any).mockResolvedValue({ 
+      const mockGetUser = supabase.auth.getUser as unknown as ReturnType<typeof vi.fn>;
+      mockGetUser.mockResolvedValue({ 
         data: { user: null }, 
         error: new Error('Unauthorized') 
       });
@@ -56,7 +57,8 @@ describe('Friends API', () => {
   describe('POST /api/friends', () => {
     it('returns 401 for unauthorized user', async () => {
       const { supabase } = await import('@/lib/supabase/client');
-      (supabase.auth.getUser as any).mockResolvedValue({ 
+      const mockGetUser = supabase.auth.getUser as unknown as ReturnType<typeof vi.fn>;
+      mockGetUser.mockResolvedValue({ 
         data: { user: null }, 
         error: new Error('Unauthorized') 
       });
@@ -75,7 +77,8 @@ describe('Friends API', () => {
 
     it('returns 400 when receiverId is missing', async () => {
       const { supabase } = await import('@/lib/supabase/client');
-      (supabase.auth.getUser as any).mockResolvedValue({ 
+      const mockGetUser = supabase.auth.getUser as unknown as ReturnType<typeof vi.fn>;
+      mockGetUser.mockResolvedValue({ 
         data: { user: { id: 'user-1' } }, 
         error: null 
       });

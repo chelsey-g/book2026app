@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://localhost:3000';
-const TEST_EMAIL = 'test@example.com';
-const TEST_PASSWORD = 'testpassword123';
 
 test.describe('BookTracker App Exploration', () => {
   test.beforeEach(async ({ page }) => {
@@ -186,11 +184,11 @@ test.describe('BookTracker App Exploration', () => {
     for (let i = 0; i < 5; i++) {
       await page.keyboard.press('Tab');
       const focused = await page.evaluate(() => {
-        const el = document.activeElement;
+        const el = document.activeElement as HTMLElement;
         return {
           tag: el?.tagName,
-          text: (el as any)?.textContent?.substring(0, 50),
-          visible: (el as any)?.offsetHeight > 0
+          text: el?.textContent?.substring(0, 50),
+          visible: el?.offsetHeight > 0
         };
       });
       console.log(`Tab ${i + 1}:`, focused);

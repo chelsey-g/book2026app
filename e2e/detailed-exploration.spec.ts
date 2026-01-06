@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -125,7 +125,6 @@ test.describe('Detailed UX & Feature Exploration', () => {
         
         const style = window.getComputedStyle(el);
         const color = style.color;
-        const bgColor = style.backgroundColor;
         
         // Very basic check - if text color is too light gray
         return color.includes('rgb(200') || color.includes('rgb(150');
@@ -375,7 +374,7 @@ test.describe('Detailed UX & Feature Exploration', () => {
     
     if (count > 0) {
       const firstCard = statCards.first();
-      const hasDescription = await firstCard.locator('p, span[class*="text-sm"], span[class*="text-gray"]').count();
+      await firstCard.locator('p, span[class*="text-sm"], span[class*="text-gray"]').count();
       
       console.log(`Issue: Ensure each stat card has explanatory text, not just numbers`);
     }
