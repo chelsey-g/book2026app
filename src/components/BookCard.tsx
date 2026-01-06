@@ -6,7 +6,7 @@ interface Book {
   author: string;
   cover?: string;
   rating?: number;
-  status: 'WANT_TO_READ' | 'CURRENTLY_READING' | 'READ';
+  status: 'WANT_TO_READ' | 'CURRENTLY_READING' | 'READ' | 'DNF';
   progress?: number;
 }
 

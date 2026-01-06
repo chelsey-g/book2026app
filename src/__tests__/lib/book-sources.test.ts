@@ -3,8 +3,13 @@ import axios from 'axios';
 import { searchBooksOpenLibrary, searchBooksGoogleAI, searchBooks } from '@/lib/data-sources/book-sources';
 
 // Mock axios
-vi.mock('axios');
-const mockedAxios = vi.mocked(axios);
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+  },
+}));
+
+const mockedAxiosGet = axios.get as ReturnType<typeof vi.fn>;
 
 describe('Book Search Utilities', () => {
   beforeEach(() => {
@@ -28,11 +33,11 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksOpenLibrary('test query', 10);
 
-      expect(mockedAxios.get).toHaveBeenCalledWith(
+      expect(mockedAxiosGet).toHaveBeenCalledWith(
         'https://openlibrary.org/search.json?q=test%20query&limit=10'
       );
 
@@ -62,7 +67,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksOpenLibrary('test query');
 
@@ -70,7 +75,7 @@ describe('Book Search Utilities', () => {
     });
 
     it('handles API errors gracefully', async () => {
-      mockedAxios.get.mockRejectedValue(new Error('API Error'));
+      mockedAxiosGet.mockRejectedValue(new Error('API Error'));
 
       const result = await searchBooksOpenLibrary('test query');
 
@@ -84,7 +89,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksOpenLibrary('test query');
 
@@ -116,11 +121,11 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksGoogleAI('test query', 10);
 
-      expect(mockedAxios.get).toHaveBeenCalledWith(
+      expect(mockedAxiosGet).toHaveBeenCalledWith(
         'https://www.googleapis.com/books/v1/volumes?q=test%20query&maxResults=10'
       );
 
@@ -151,7 +156,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksGoogleAI('test query');
 
@@ -169,7 +174,7 @@ describe('Book Search Utilities', () => {
     });
 
     it('handles API errors gracefully', async () => {
-      mockedAxios.get.mockRejectedValue(new Error('API Error'));
+      mockedAxiosGet.mockRejectedValue(new Error('API Error'));
 
       const result = await searchBooksGoogleAI('test query');
 
@@ -183,7 +188,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksGoogleAI('test query');
 
@@ -208,7 +213,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockedAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await searchBooksGoogleAI('test query');
 
@@ -229,7 +234,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValueOnce(openLibraryResponse);
+      mockedAxiosGet.mockResolvedValueOnce(openLibraryResponse);
 
       const result = await searchBooks('test query');
 
@@ -246,7 +251,7 @@ describe('Book Search Utilities', () => {
       ]);
 
       // Should not call Google Books API
-      expect(mockedAxios.get).toHaveBeenCalledTimes(1);
+      expect(mockedAxiosGet).toHaveBeenCalledTimes(1);
     });
 
     it('falls back to Google Books when Open Library returns no results', async () => {
@@ -269,7 +274,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxios.get
+      mockedAxiosGet
         .mockResolvedValueOnce(openLibraryResponse)
         .mockResolvedValueOnce(googleResponse);
 
@@ -288,11 +293,11 @@ describe('Book Search Utilities', () => {
       ]);
 
       // Should call both APIs
-      expect(mockedAxios.get).toHaveBeenCalledTimes(2);
+      expect(mockedAxiosGet).toHaveBeenCalledTimes(2);
     });
 
     it('returns empty array when both APIs fail', async () => {
-      mockedAxios.get.mockRejectedValue(new Error('API Error'));
+      mockedAxiosGet.mockRejectedValue(new Error('API Error'));
 
       const result = await searchBooks('test query');
 

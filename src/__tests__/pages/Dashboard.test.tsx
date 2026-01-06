@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import Dashboard from '@/app/dashboard/page';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const mockUseAuth = vi.fn();
 
@@ -36,7 +37,11 @@ describe('Dashboard', () => {
         signOut: vi.fn(),
       });
 
-      render(<Dashboard />);
+      render(
+        <ThemeProvider>
+          <Dashboard />
+        </ThemeProvider>
+      );
       
       expect(mockLocation.href).toBe('/');
     });
@@ -50,7 +55,11 @@ describe('Dashboard', () => {
         signOut: vi.fn(),
       });
 
-      render(<Dashboard />);
+      render(
+        <ThemeProvider>
+          <Dashboard />
+        </ThemeProvider>
+      );
       
       expect(mockLocation.href).toBe('http://localhost:3000/');
     });
@@ -62,7 +71,11 @@ describe('Dashboard', () => {
         signOut: vi.fn(),
       });
 
-      render(<Dashboard />);
+      render(
+        <ThemeProvider>
+          <Dashboard />
+        </ThemeProvider>
+      );
       
       expect(mockLocation.href).toBe('http://localhost:3000/');
     });

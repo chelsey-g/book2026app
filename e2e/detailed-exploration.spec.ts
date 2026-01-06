@@ -190,7 +190,7 @@ test.describe('Detailed UX & Feature Exploration', () => {
     const statsCard = page.locator('[class*="stat"], [class*="card"]').first();
     const initialText = await statsCard.textContent().catch(() => '');
     
-    console.log(`Initial stat value: ${initialText.substring(0, 50)}`);
+    console.log(`Initial stat value: ${initialText?.substring(0, 50) || ''}`);
     
     // Wait and check if data updates
     await page.waitForTimeout(2000);
@@ -288,7 +288,7 @@ test.describe('Detailed UX & Feature Exploration', () => {
     await page.goto(`${BASE_URL}/dashboard`);
     
     const violations = await page.evaluate(() => {
-      const issues = [];
+      const issues: string[] = [];
       
       // Check for images without alt
       document.querySelectorAll('img').forEach(img => {

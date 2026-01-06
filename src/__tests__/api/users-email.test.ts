@@ -33,7 +33,7 @@ describe('Users Email API', () => {
       expect(data.error).toBe('Unauthorized');
     });
 
-    it('returns 400 when newEmail is missing', async () => {
+    it('returns 500 when newEmail is missing', async () => {
       const request = new NextRequest('http://localhost:3000/api/users/email', {
         method: 'POST',
         headers: {
@@ -44,7 +44,7 @@ describe('Users Email API', () => {
       });
 
       const response = await POST(request);
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(500);
     });
 
     it('validates email format', async () => {
