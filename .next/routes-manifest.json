@@ -1,0 +1,243 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/books/[id]",
+      "regex": "^/api/books/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/books/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/users/books/[id]",
+      "regex": "^/api/users/books/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/users/books/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/books/[id]",
+      "regex": "^/books/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/books/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/books/bulk-import",
+      "regex": "^/api/books/bulk\\-import(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/books/bulk\\-import(?:/)?$"
+    },
+    {
+      "page": "/api/books/popular",
+      "regex": "^/api/books/popular(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/books/popular(?:/)?$"
+    },
+    {
+      "page": "/api/books/search",
+      "regex": "^/api/books/search(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/books/search(?:/)?$"
+    },
+    {
+      "page": "/api/friends",
+      "regex": "^/api/friends(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/friends(?:/)?$"
+    },
+    {
+      "page": "/api/profile-picture",
+      "regex": "^/api/profile\\-picture(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/profile\\-picture(?:/)?$"
+    },
+    {
+      "page": "/api/reading-goals",
+      "regex": "^/api/reading\\-goals(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/reading\\-goals(?:/)?$"
+    },
+    {
+      "page": "/api/recommendations",
+      "regex": "^/api/recommendations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/recommendations(?:/)?$"
+    },
+    {
+      "page": "/api/reviews",
+      "regex": "^/api/reviews(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/reviews(?:/)?$"
+    },
+    {
+      "page": "/api/statistics",
+      "regex": "^/api/statistics(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/statistics(?:/)?$"
+    },
+    {
+      "page": "/api/users/books",
+      "regex": "^/api/users/books(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users/books(?:/)?$"
+    },
+    {
+      "page": "/api/users/books/rating",
+      "regex": "^/api/users/books/rating(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users/books/rating(?:/)?$"
+    },
+    {
+      "page": "/api/users/books/status",
+      "regex": "^/api/users/books/status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users/books/status(?:/)?$"
+    },
+    {
+      "page": "/api/users/email",
+      "regex": "^/api/users/email(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users/email(?:/)?$"
+    },
+    {
+      "page": "/api/users/profile",
+      "regex": "^/api/users/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users/profile(?:/)?$"
+    },
+    {
+      "page": "/auth/signin",
+      "regex": "^/auth/signin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/signin(?:/)?$"
+    },
+    {
+      "page": "/auth/signup",
+      "regex": "^/auth/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/signup(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/discover",
+      "regex": "^/discover(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/discover(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/friends",
+      "regex": "^/friends(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/friends(?:/)?$"
+    },
+    {
+      "page": "/import-books",
+      "regex": "^/import\\-books(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/import\\-books(?:/)?$"
+    },
+    {
+      "page": "/my-books",
+      "regex": "^/my\\-books(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/my\\-books(?:/)?$"
+    },
+    {
+      "page": "/profile",
+      "regex": "^/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/profile(?:/)?$"
+    },
+    {
+      "page": "/recommendations",
+      "regex": "^/recommendations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/recommendations(?:/)?$"
+    },
+    {
+      "page": "/search",
+      "regex": "^/search(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/search(?:/)?$"
+    },
+    {
+      "page": "/settings",
+      "regex": "^/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

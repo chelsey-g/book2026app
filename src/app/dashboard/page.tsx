@@ -43,7 +43,6 @@ interface ReadingStats {
 interface ReadingGoal {
   id: string;
   goal_count: number;
-  description?: string;
 }
 
 interface MonthlyTrend {
@@ -235,11 +234,11 @@ export default function Dashboard() {
         if (data.goal) {
           setReadingGoal(data.goal);
         } else {
-          setReadingGoal({ id: '', goal_count: 12, description: '' });
+          setReadingGoal({ id: '', goal_count: 12 });
         }
       } catch (error) {
         console.error('Error fetching reading goal:', error);
-        setReadingGoal({ id: '', goal_count: 12, description: '' });
+        setReadingGoal({ id: '', goal_count: 12 });
       }
     };
 

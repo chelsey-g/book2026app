@@ -1,0 +1,3 @@
+{
+  "/api/users/books/rating/route": "app/api/users/books/rating/route.js"
+}

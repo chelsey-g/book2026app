@@ -1,0 +1,3 @@
+{
+  "/api/books/bulk-import/route": "app/api/books/bulk-import/route.js"
+}

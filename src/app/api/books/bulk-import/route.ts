@@ -15,6 +15,7 @@ interface BookData {
   publishedDate?: string
   publisher?: string
   categories?: string[]
+  year?: number
 }
 
 async function searchBookAPI(title: string, author: string) {
@@ -29,15 +30,13 @@ async function searchBookAPI(title: string, author: string) {
   }
 }
 
-function parseDate(dateString: string | undefined): string | null {
+function parseDate(dateString: string | undefined, year: number): string | null {
   if (!dateString || dateString.trim() === '') return null
 
   try {
-    const currentYear = new Date().getFullYear()
-    
     const cleanedDate = dateString.replace(/(\d+)(st|nd|rd|th)/g, '$1')
     
-    const dateWithYear = `${cleanedDate} ${currentYear}`
+    const dateWithYear = `${cleanedDate} ${year}`
     const parsed = new Date(dateWithYear)
     
     if (isNaN(parsed.getTime())) {
@@ -108,11 +107,13 @@ async function createOrUpdateUserBook(supabase: any, userId: string, bookId: str
     .eq('book_id', bookId)
     .single()
 
+  const year = bookData.year || new Date().getFullYear()
+
   const userBookData = {
     status: bookData.status,
     rating: bookData.rating || null,
-    started_at: parseDate(bookData.dateStarted),
-    completed_at: parseDate(bookData.dateFinished),
+    started_at: parseDate(bookData.dateStarted, year),
+    completed_at: parseDate(bookData.dateFinished, year),
   }
 
   if (existingUserBook) {

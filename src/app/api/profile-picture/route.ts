@@ -21,7 +21,10 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData()
+    console.log('Received FormData keys:', Array.from(formData.keys()))
     const file = formData.get('profilePicture') as File
+
+    console.log('File received:', file ? { name: file.name, type: file.type, size: file.size } : 'null')
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -48,12 +51,12 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-     const { data: uploadData, error: uploadError } = await supabase.storage
-       .from('profile-pictures')
-       .upload(filePath, buffer, {
-         contentType: file.type,
-         upsert: true
-       })
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('avatar_images')
+        .upload(filePath, buffer, {
+          contentType: file.type,
+          upsert: true
+        })
 
      if (uploadError) {
        console.error('Upload error:', uploadError)
@@ -63,31 +66,57 @@ export async function POST(request: NextRequest) {
        )
      }
 
-     const { data: { publicUrl } } = supabase.storage
-       .from('profile-pictures')
-       .getPublicUrl(filePath)
+      // Construct the public URL directly for public buckets
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      if (!supabaseUrl) {
+        throw new Error('NEXT_PUBLIC_SUPABASE_URL is not set')
+      }
+      
+      // For public buckets, use the direct public URL format
+      const imageUrl = `${supabaseUrl}/storage/v1/object/public/avatar_images/${fileName}`
 
-     const { error: updateError } = await supabase
-       .from('users')
-       .update({ image: publicUrl })
-       .eq('id', user.id)
+      console.log('Constructed public URL:', imageUrl)
 
-     if (updateError) {
-       console.error('Database update error:', updateError)
-       try {
-         await supabase.storage
-           .from('profile-pictures')
-           .remove([filePath])
-       } catch (e) {
-         console.error('Failed to clean up storage:', e)
-       }
-       return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
-     }
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ image: imageUrl })
+        .eq('id', user.id)
+        .select()
 
-     return NextResponse.json({ 
-       success: true, 
-       profilePictureUrl: publicUrl 
-     })
+      if (updateError) {
+      console.error('Database update error:', updateError)
+      try {
+        await supabase.storage
+          .from('avatar_images')
+          .remove([filePath])
+      } catch (e) {
+        console.error('Failed to clean up storage:', e)
+      }
+
+      return NextResponse.json({ error: 'Failed to update profile' + updateError.message }, { status: 500 })
+    }
+
+    try {
+      const updatedUser = await supabase
+        .from('users')
+        .select('image')
+        .eq('id', user.id)
+        .single()
+
+      console.log('Updated user image:', updatedUser.data?.image)
+
+      return NextResponse.json({
+        success: true,
+        profilePictureUrl: imageUrl
+      })
+    } catch (error) {
+      console.error('Profile picture upload error:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      return NextResponse.json(
+        { error: `Internal server error: ${errorMessage}` },
+        { status: 500 }
+      )
+    }
 
    } catch (error) {
      console.error('Profile picture upload error:', error)

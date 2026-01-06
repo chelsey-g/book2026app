@@ -378,7 +378,7 @@ export default function Settings() {
                       }
                     }}
                     placeholder="New username (optional)"
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all text-gray-900 ${
                       accountErrors.username
                         ? 'border-red-300 focus:ring-red-500'
                         : 'border-gray-300 focus:ring-blue-500'
@@ -408,7 +408,7 @@ export default function Settings() {
                             }
                           }}
                           placeholder="Enter current password"
-                          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all pr-10 ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all pr-10 text-gray-900 ${
                             accountErrors.currentPassword
                               ? 'border-red-300 focus:ring-red-500'
                               : 'border-gray-300 focus:ring-blue-500'
@@ -446,7 +446,7 @@ export default function Settings() {
                             }
                           }}
                           placeholder="New password (min 6 characters)"
-                          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all pr-10 ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all pr-10 text-gray-900 ${
                             accountErrors.newPassword
                               ? 'border-red-300 focus:ring-red-500'
                               : 'border-gray-300 focus:ring-blue-500'
@@ -484,7 +484,7 @@ export default function Settings() {
                             }
                           }}
                           placeholder="Confirm new password"
-                          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all pr-10 ${
+                          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all pr-10 text-gray-900 ${
                             accountErrors.confirmPassword
                               ? 'border-red-300 focus:ring-red-500'
                               : 'border-gray-300 focus:ring-blue-500'
@@ -572,7 +572,7 @@ export default function Settings() {
                       }
                     }}
                     placeholder="Enter new email address"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-gray-900"
                   />
                 </div>
 

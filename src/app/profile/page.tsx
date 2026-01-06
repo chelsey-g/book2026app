@@ -10,7 +10,7 @@ import { Target } from 'lucide-react';
 interface UserProfile {
   id: string;
   username: string;
-  full_name: string;
+  name: string;
   bio: string;
   created_at: string;
 }
@@ -24,6 +24,7 @@ interface UserBook {
   };
   status: string;
   rating?: number;
+  completed_at?: string;
 }
 
 interface ReadingGoal {
@@ -31,7 +32,6 @@ interface ReadingGoal {
   user_id: string;
   year: number;
   goal_count: number;
-  description?: string;
   created_at: string;
 }
 
@@ -45,7 +45,6 @@ export default function ProfilePage() {
   const [editBio, setEditBio] = useState('');
   const [isEditingGoal, setIsEditingGoal] = useState(false);
   const [editGoalCount, setEditGoalCount] = useState(12);
-  const [editGoalDescription, setEditGoalDescription] = useState('');
   const [uploadingPicture, setUploadingPicture] = useState(false);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
 
@@ -64,53 +63,7 @@ export default function ProfilePage() {
          setEditBio(data.bio || '');
          setProfilePictureUrl(data.image || null);
       } else {
-        // User doesn't exist in users table yet, or there's an error
-        console.log('User profile not found, creating profile...');
-        try {
-           const { data: newUser, error: createError } = await supabase
-             .from('users')
-             .insert({
-               id: user?.id,
-               username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'user',
-               full_name: user?.user_metadata?.name || user?.user_metadata?.full_name || '',
-               bio: '',
-             })
-             .select()
-             .single();
-
-          if (newUser && !createError) {
-            setProfile(newUser);
-            setEditBio('');
-            setProfilePictureUrl(null);
-            console.log('User profile created successfully');
-          } else {
-            console.error('Error creating user profile:', createError);
-            // If profile creation fails, create a minimal profile object
-            const fallbackProfile = {
-              id: user?.id || '',
-              username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'user',
-              full_name: user?.user_metadata?.name || user?.user_metadata?.full_name || '',
-              bio: '',
-              created_at: user?.created_at || new Date().toISOString(),
-            };
-            setProfile(fallbackProfile);
-            setEditBio('');
-            setProfilePictureUrl(null);
-          }
-        } catch (createError) {
-          console.error('Exception creating user profile:', createError);
-          // Fallback to auth user data
-          const fallbackProfile = {
-            id: user?.id || '',
-            username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'user',
-            full_name: user?.user_metadata?.name || user?.user_metadata?.full_name || '',
-            bio: '',
-            created_at: user?.created_at || new Date().toISOString(),
-          };
-          setProfile(fallbackProfile);
-          setEditBio('');
-          setProfilePictureUrl(null);
-        }
+        console.error('User profile not found:', error);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -158,7 +111,6 @@ export default function ProfilePage() {
       if (data.goal) {
         setReadingGoal(data.goal);
         setEditGoalCount(data.goal.goal_count);
-        setEditGoalDescription(data.goal.description || '');
       }
     } catch (error) {
       console.error('Error fetching reading goal:', error);
@@ -199,7 +151,6 @@ export default function ProfilePage() {
         },
         body: JSON.stringify({
           goal_count: editGoalCount,
-          description: editGoalDescription,
           year: new Date().getFullYear(),
         }),
       });
@@ -231,14 +182,22 @@ export default function ProfilePage() {
   };
 
   const booksReadThisYear = getBooksByStatus('READ').filter(book => {
-    if (!book.books) return false;
-    return true;
+    if (!book.completed_at) return false;
+    const completedYear = new Date(book.completed_at).getFullYear();
+    const currentYear = new Date().getFullYear();
+    return completedYear === currentYear;
   }).length;
 
 
   const handleProfilePictureUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('File input changed, files:', event.target.files);
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
+
+    console.log('File selected:', file.name, file.type, file.size);
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -255,6 +214,7 @@ export default function ProfilePage() {
     }
 
     setUploadingPicture(true);
+    console.log('Starting upload...');
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -266,6 +226,10 @@ export default function ProfilePage() {
       const formData = new FormData();
       formData.append('profilePicture', file);
 
+      console.log('FormData created with file:', file);
+      console.log('FormData has profilePicture:', formData.has('profilePicture'));
+
+      console.log('Sending request to /api/profile-picture...');
       const response = await fetch('/api/profile-picture', {
         method: 'POST',
         headers: {
@@ -274,23 +238,23 @@ export default function ProfilePage() {
         body: formData,
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Upload failed');
       }
 
        if (data.success) {
-         console.log('Upload response:', data);
-         console.log('Setting profilePictureUrl to:', data.profilePictureUrl);
+         console.log('Upload successful, new URL:', data.profilePictureUrl);
+
          setProfilePictureUrl(data.profilePictureUrl);
-         setProfile(prev => {
-           console.log('Updating profile state');
-           return prev ? { ...prev, image: data.profilePictureUrl } : null;
-         });
-         console.log('Calling fetchProfile...');
+         setProfile(prev => prev ? { ...prev, image: data.profilePictureUrl } : null);
+
+         // Fetch profile immediately to get updated data
          await fetchProfile();
-         console.log('Profile picture updated successfully');
+         alert('Profile picture updated successfully!');
        }
     } catch (error) {
       console.error('Upload error:', error);
@@ -331,37 +295,44 @@ export default function ProfilePage() {
           
           <div className="px-8 pb-8">
             <div className="flex items-start gap-6 -mt-16 mb-6">
-              <div className="relative group">
-                <div className="h-32 w-32 rounded-full flex items-center justify-center cursor-pointer overflow-hidden relative ring-4 ring-white shadow-lg">
-                  <img 
-                    src={profilePictureUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect fill='%2318b8a6' width='128' height='128'/%3E%3C/svg%3E"} 
-                    alt="Profile" 
-                    className="h-32 w-32 object-cover rounded-full relative z-10"
-                    style={{ display: 'block', opacity: 1, zIndex: 999 }}
-                  />
-                </div>
-                <label className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 z-20">
-                  <FiCamera className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfilePictureUpload}
-                    disabled={uploadingPicture}
-                    className="hidden"
-                  />
-                </label>
-                {uploadingPicture && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
-                    <div className="animate-spin">
-                      <FiUpload className="w-5 h-5 text-white" />
-                    </div>
-                  </div>
-                )}
+              <div className="relative" style={{ width: '128px', height: '128px' }}>
+                    {profilePictureUrl ? (
+                      <img
+                        src={profilePictureUrl}
+                        alt="Profile"
+                        className="h-32 w-32 object-cover rounded-full border-4 border-white shadow-lg"
+                      />
+                    ) : (
+                      <img
+                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Ccircle cx='64' cy='64' r='64' fill='%23e5e7eb'/%3E%3C/svg%3E"
+                        alt="Profile"
+                        className="h-32 w-32 object-cover rounded-full border-4 border-white shadow-lg"
+                      />
+                    )}
+                    <label 
+                      htmlFor="avatar-upload" 
+                      className="absolute bottom-0 right-0 bg-teal-600 hover:bg-teal-700 text-white rounded-full p-2 cursor-pointer shadow-lg transition-colors"
+                      title="Upload avatar"
+                    >
+                      {uploadingPicture ? (
+                        <FiUpload className="w-5 h-5 animate-pulse" />
+                      ) : (
+                        <FiCamera className="w-5 h-5" />
+                      )}
+                    </label>
+                    <input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                      onChange={handleProfilePictureUpload}
+                      className="hidden"
+                      disabled={uploadingPicture}
+                    />
               </div>
 
               <div className="flex-1 mt-16">
                 <h1 className="text-3xl font-bold text-gray-900 mb-1">
-                  {profile?.full_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'}
+                  {profile?.name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'}
                 </h1>
                 <p className="text-gray-500 mb-1">@{user.user_metadata?.username || profile?.username || user.email?.split('@')[0] || 'user'}</p>
                 <p className="text-sm text-gray-400 flex items-center gap-1">
@@ -414,7 +385,7 @@ export default function ProfilePage() {
                   <textarea
                     value={editBio}
                     onChange={(e) => setEditBio(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none bg-white"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none bg-white text-gray-900"
                     rows={3}
                     placeholder="Tell us about yourself..."
                   />
@@ -474,19 +445,7 @@ export default function ProfilePage() {
                   max="365"
                   value={editGoalCount}
                   onChange={(e) => setEditGoalCount(parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description (optional)
-                </label>
-                <textarea
-                  value={editGoalDescription}
-                  onChange={(e) => setEditGoalDescription(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  rows={2}
-                  placeholder="e.g., Focus on sci-fi and fantasy..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-900"
                 />
               </div>
               <div className="flex space-x-2">
@@ -501,7 +460,6 @@ export default function ProfilePage() {
                     setIsEditingGoal(false);
                     if (readingGoal) {
                       setEditGoalCount(readingGoal.goal_count);
-                      setEditGoalDescription(readingGoal.description || '');
                     }
                   }}
                   className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
@@ -525,9 +483,6 @@ export default function ProfilePage() {
                 <div className="text-sm text-purple-700 mt-1">Progress</div>
               </div>
             </div>
-          )}
-          {readingGoal?.description && !isEditingGoal && (
-            <p className="text-gray-600 text-sm mt-4 italic">&quot;{readingGoal.description}&quot;</p>
           )}
         </div>
 

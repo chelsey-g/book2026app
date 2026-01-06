@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { goal_count, year, description } = await request.json()
+    const { goal_count, year } = await request.json()
 
     if (!goal_count || goal_count < 1) {
       return NextResponse.json({ error: 'goal_count must be at least 1' }, { status: 400 })
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     if (existingGoal) {
       result = await supabase
         .from('reading_goals')
-        .update({ goal_count, description })
+        .update({ goal_count })
         .eq('user_id', user.id)
         .eq('year', currentYear)
         .select()
@@ -92,7 +92,6 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           year: currentYear,
           goal_count,
-          description,
           created_at: new Date().toISOString(),
         })
         .select()

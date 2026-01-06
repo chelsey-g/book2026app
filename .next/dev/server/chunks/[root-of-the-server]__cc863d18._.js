@@ -128,7 +128,7 @@ async function POST(request) {
                 status: 401
             });
         }
-        const { goal_count, year, description } = await request.json();
+        const { goal_count, year } = await request.json();
         if (!goal_count || goal_count < 1) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 error: 'goal_count must be at least 1'
@@ -141,15 +141,13 @@ async function POST(request) {
         let result;
         if (existingGoal) {
             result = await supabase.from('reading_goals').update({
-                goal_count,
-                description
+                goal_count
             }).eq('user_id', user.id).eq('year', currentYear).select().single();
         } else {
             result = await supabase.from('reading_goals').insert({
                 user_id: user.id,
                 year: currentYear,
                 goal_count,
-                description,
                 created_at: new Date().toISOString()
             }).select().single();
         }

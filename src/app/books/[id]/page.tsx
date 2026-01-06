@@ -83,7 +83,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
 
    const fetchBookDetails = async () => {
      try {
-       const response = await fetch(`/api/books/${params.id}`);
+       const response = await fetch(`/api/books/${bookId}`);
        const data = await response.json();
        
        if (!response.ok) {
@@ -97,7 +97,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
          const userBooksResponse = await fetch('/api/users/books');
          const userBooksData = await userBooksResponse.json();
          
-         const existingBook = userBooksData.books.find((b: any) => b.books?.isbn === params.id || b.book_id === params.id);
+          const existingBook = userBooksData.books.find((b: any) => b.books?.isbn === bookId || b.book_id === bookId);
          if (existingBook) {
            setUserBookStatus(existingBook.status);
          }
@@ -109,7 +109,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
 
    const fetchBookReviews = async () => {
      try {
-       const response = await fetch(`/api/reviews?bookId=${params.id}`);
+       const response = await fetch(`/api/reviews?bookId=${bookId}`);
        const data = await response.json();
        
        if (response.ok && data.reviews) {
@@ -391,7 +391,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                       value={newReview.content}
                       onChange={(e) => setNewReview(prev => ({ ...prev, content: e.target.value }))}
                       placeholder="Share your thoughts about this book"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
                       rows={4}
                     />
                   </div>

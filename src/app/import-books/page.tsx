@@ -30,6 +30,7 @@ export default function ImportBooksPage() {
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
   const [searchingCovers, setSearchingCovers] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   if (!user) {
     return (
@@ -203,16 +204,17 @@ export default function ImportBooksPage() {
          throw new Error('Authentication required');
        }
 
-       const booksToImport = selectedBooks.map(book => ({
-         name: book.name,
-         author: book.author,
-         status: book.status,
-         rating: book.rating,
-         dateStarted: book.dateStarted,
-         dateFinished: book.dateFinished,
-         type: book.type,
-         cover: book.coverUrl,
-       }));
+        const booksToImport = selectedBooks.map(book => ({
+          name: book.name,
+          author: book.author,
+          status: book.status,
+          rating: book.rating,
+          dateStarted: book.dateStarted,
+          dateFinished: book.dateFinished,
+          type: book.type,
+          cover: book.coverUrl,
+          year: selectedYear,
+        }));
 
        console.log('📤 Sending books to import:', booksToImport);
        console.log('📤 Auth token:', session.access_token?.slice(0, 20) + '...');
@@ -327,6 +329,29 @@ export default function ImportBooksPage() {
                     Deselect All
                   </button>
                 </div>
+              </div>
+
+              <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <label className="block text-sm font-medium text-blue-900 mb-2">
+                  Reading Year
+                </label>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                  className="w-full sm:w-48 px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent bg-white"
+                >
+                  {Array.from({ length: 10 }, (_, i) => {
+                    const year = new Date().getFullYear() - i;
+                    return (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    );
+                  })}
+                </select>
+                <p className="text-xs text-blue-700 mt-2">
+                  Select the year when you read these books. Dates without years will use this year.
+                </p>
               </div>
 
               {searchingCovers && (

@@ -63,12 +63,11 @@ async function searchBookAPI(title, author) {
         return null;
     }
 }
-function parseDate(dateString) {
+function parseDate(dateString, year) {
     if (!dateString || dateString.trim() === '') return null;
     try {
-        const currentYear = new Date().getFullYear();
         const cleanedDate = dateString.replace(/(\d+)(st|nd|rd|th)/g, '$1');
-        const dateWithYear = `${cleanedDate} ${currentYear}`;
+        const dateWithYear = `${cleanedDate} ${year}`;
         const parsed = new Date(dateWithYear);
         if (isNaN(parsed.getTime())) {
             console.warn(`Could not parse date: "${dateString}"`);
@@ -114,11 +113,12 @@ async function findOrCreateBook(supabase, bookData) {
 }
 async function createOrUpdateUserBook(supabase, userId, bookId, bookData) {
     const { data: existingUserBook } = await supabase.from('user_books').select('*').eq('user_id', userId).eq('book_id', bookId).single();
+    const year = bookData.year || new Date().getFullYear();
     const userBookData = {
         status: bookData.status,
         rating: bookData.rating || null,
-        started_at: parseDate(bookData.dateStarted),
-        completed_at: parseDate(bookData.dateFinished)
+        started_at: parseDate(bookData.dateStarted, year),
+        completed_at: parseDate(bookData.dateFinished, year)
     };
     if (existingUserBook) {
         const { error } = await supabase.from('user_books').update(userBookData).eq('user_id', userId).eq('book_id', bookId);

@@ -1,6 +1,31 @@
 globalThis.__BUILD_MANIFEST = {
   "pages": {
-    "/_app": []
+    "/_app": [
+      "static/chunks/5de9b_next_dist_compiled_9ccb8294._.js",
+      "static/chunks/5de9b_next_dist_shared_lib_8ba9d16e._.js",
+      "static/chunks/5de9b_next_dist_client_71e8829f._.js",
+      "static/chunks/5de9b_next_dist_39516d05._.js",
+      "static/chunks/5de9b_next_app_297b6535.js",
+      "static/chunks/[next]_entry_page-loader_ts_d77bb2a5._.js",
+      "static/chunks/5de9b_react-dom_be79a9e6._.js",
+      "static/chunks/5de9b_7019aef8._.js",
+      "static/chunks/[root-of-the-server]__dc5faaf2._.js",
+      "static/chunks/book-tracker-app_pages__app_2da965e7._.js",
+      "static/chunks/turbopack-book-tracker-app_pages__app_92daa601._.js"
+    ],
+    "/_error": [
+      "static/chunks/5de9b_next_dist_compiled_9ccb8294._.js",
+      "static/chunks/5de9b_next_dist_shared_lib_20106b11._.js",
+      "static/chunks/5de9b_next_dist_client_71e8829f._.js",
+      "static/chunks/5de9b_next_dist_c900f656._.js",
+      "static/chunks/5de9b_next_error_a5db4782.js",
+      "static/chunks/[next]_entry_page-loader_ts_15b3f6d9._.js",
+      "static/chunks/5de9b_react-dom_be79a9e6._.js",
+      "static/chunks/5de9b_7019aef8._.js",
+      "static/chunks/[root-of-the-server]__f66fd631._.js",
+      "static/chunks/book-tracker-app_pages__error_2da965e7._.js",
+      "static/chunks/turbopack-book-tracker-app_pages__error_16c880cb._.js"
+    ]
   },
   "devFiles": [],
   "polyfillFiles": [

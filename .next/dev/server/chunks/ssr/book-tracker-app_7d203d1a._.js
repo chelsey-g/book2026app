@@ -28,6 +28,7 @@ function ImportBooksPage() {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [importing, setImporting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [searchingCovers, setSearchingCovers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [selectedYear, setSelectedYear] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(new Date().getFullYear());
     if (!user) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "min-h-screen bg-gradient-to-br from-gray-50 via-white to-teal-50/30 flex items-center justify-center",
@@ -38,7 +39,7 @@ function ImportBooksPage() {
                         className: "w-16 h-16 text-gray-400 mx-auto mb-4"
                     }, void 0, false, {
                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                        lineNumber: 38,
+                        lineNumber: 39,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -46,7 +47,7 @@ function ImportBooksPage() {
                         children: "Sign In Required"
                     }, void 0, false, {
                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                        lineNumber: 39,
+                        lineNumber: 40,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -54,7 +55,7 @@ function ImportBooksPage() {
                         children: "Sign in to import books from your Notion database"
                     }, void 0, false, {
                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                        lineNumber: 40,
+                        lineNumber: 41,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -63,18 +64,18 @@ function ImportBooksPage() {
                         children: "Sign In"
                     }, void 0, false, {
                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                        lineNumber: 41,
+                        lineNumber: 42,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                lineNumber: 37,
+                lineNumber: 38,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-            lineNumber: 36,
+            lineNumber: 37,
             columnNumber: 7
         }, this);
     }
@@ -224,7 +225,8 @@ function ImportBooksPage() {
                     dateStarted: book.dateStarted,
                     dateFinished: book.dateFinished,
                     type: book.type,
-                    cover: book.coverUrl
+                    cover: book.coverUrl,
+                    year: selectedYear
                 }));
             console.log('📤 Sending books to import:', booksToImport);
             console.log('📤 Auth token:', session.access_token?.slice(0, 20) + '...');
@@ -270,7 +272,7 @@ function ImportBooksPage() {
                             children: "Import Books from Notion"
                         }, void 0, false, {
                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                            lineNumber: 255,
+                            lineNumber: 257,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -278,13 +280,13 @@ function ImportBooksPage() {
                             children: "Upload your Notion CSV export to quickly add books to your library"
                         }, void 0, false, {
                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                            lineNumber: 256,
+                            lineNumber: 258,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                    lineNumber: 254,
+                    lineNumber: 256,
                     columnNumber: 9
                 }, this),
                 parsedBooks.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -298,12 +300,12 @@ function ImportBooksPage() {
                                     className: "w-8 h-8 text-blue-600"
                                 }, void 0, false, {
                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                    lineNumber: 263,
+                                    lineNumber: 265,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                lineNumber: 262,
+                                lineNumber: 264,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -311,7 +313,7 @@ function ImportBooksPage() {
                                 children: "Upload Notion CSV"
                             }, void 0, false, {
                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                lineNumber: 265,
+                                lineNumber: 267,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -319,7 +321,7 @@ function ImportBooksPage() {
                                 children: "Export your reading list from Notion as CSV and upload it here. We'll match each book with cover art and let you review before importing."
                             }, void 0, false, {
                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                lineNumber: 266,
+                                lineNumber: 268,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -333,7 +335,7 @@ function ImportBooksPage() {
                                         disabled: loading
                                     }, void 0, false, {
                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                        lineNumber: 271,
+                                        lineNumber: 273,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -344,7 +346,7 @@ function ImportBooksPage() {
                                                     className: "w-5 h-5 animate-spin"
                                                 }, void 0, false, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 281,
+                                                    lineNumber: 283,
                                                     columnNumber: 23
                                                 }, this),
                                                 "Processing..."
@@ -355,7 +357,7 @@ function ImportBooksPage() {
                                                     className: "w-5 h-5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 286,
+                                                    lineNumber: 288,
                                                     columnNumber: 23
                                                 }, this),
                                                 "Choose CSV File"
@@ -363,13 +365,13 @@ function ImportBooksPage() {
                                         }, void 0, true)
                                     }, void 0, false, {
                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                        lineNumber: 278,
+                                        lineNumber: 280,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                lineNumber: 270,
+                                lineNumber: 272,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -380,7 +382,7 @@ function ImportBooksPage() {
                                         children: "📋 How to export from Notion:"
                                     }, void 0, false, {
                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                        lineNumber: 294,
+                                        lineNumber: 296,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
@@ -390,51 +392,51 @@ function ImportBooksPage() {
                                                 children: "1. Open your Notion database"
                                             }, void 0, false, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 296,
+                                                lineNumber: 298,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                                 children: "2. Click the ⋯ menu (top right)"
                                             }, void 0, false, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 297,
+                                                lineNumber: 299,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                                 children: '3. Select "Download" → "Markdown & CSV"'
                                             }, void 0, false, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 298,
+                                                lineNumber: 300,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                                 children: "4. Upload the CSV file here"
                                             }, void 0, false, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 299,
+                                                lineNumber: 301,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                        lineNumber: 295,
+                                        lineNumber: 297,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                lineNumber: 293,
+                                lineNumber: 295,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                        lineNumber: 261,
+                        lineNumber: 263,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                    lineNumber: 260,
+                    lineNumber: 262,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "space-y-6",
@@ -455,7 +457,7 @@ function ImportBooksPage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 309,
+                                                    lineNumber: 311,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -468,13 +470,13 @@ function ImportBooksPage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 312,
+                                                    lineNumber: 314,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                            lineNumber: 308,
+                                            lineNumber: 310,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -486,7 +488,7 @@ function ImportBooksPage() {
                                                     children: "Select All"
                                                 }, void 0, false, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 317,
+                                                    lineNumber: 319,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -495,19 +497,66 @@ function ImportBooksPage() {
                                                     children: "Deselect All"
                                                 }, void 0, false, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 323,
+                                                    lineNumber: 325,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                            lineNumber: 316,
+                                            lineNumber: 318,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                    lineNumber: 307,
+                                    lineNumber: 309,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-medium text-blue-900 mb-2",
+                                            children: "Reading Year"
+                                        }, void 0, false, {
+                                            fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
+                                            lineNumber: 335,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                            value: selectedYear,
+                                            onChange: (e)=>setSelectedYear(parseInt(e.target.value)),
+                                            className: "w-full sm:w-48 px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent bg-white",
+                                            children: Array.from({
+                                                length: 10
+                                            }, (_, i)=>{
+                                                const year = new Date().getFullYear() - i;
+                                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: year,
+                                                    children: year
+                                                }, year, false, {
+                                                    fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
+                                                    lineNumber: 346,
+                                                    columnNumber: 23
+                                                }, this);
+                                            })
+                                        }, void 0, false, {
+                                            fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
+                                            lineNumber: 338,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-blue-700 mt-2",
+                                            children: "Select the year when you read these books. Dates without years will use this year."
+                                        }, void 0, false, {
+                                            fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
+                                            lineNumber: 352,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
+                                    lineNumber: 334,
                                     columnNumber: 15
                                 }, this),
                                 searchingCovers && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -517,20 +566,20 @@ function ImportBooksPage() {
                                             className: "w-4 h-4 animate-spin"
                                         }, void 0, false, {
                                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                            lineNumber: 334,
+                                            lineNumber: 359,
                                             columnNumber: 19
                                         }, this),
                                         "Searching for cover art..."
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                    lineNumber: 333,
+                                    lineNumber: 358,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                            lineNumber: 306,
+                            lineNumber: 308,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -549,7 +598,7 @@ function ImportBooksPage() {
                                                     className: "w-16 h-24 object-cover rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 354,
+                                                    lineNumber: 379,
                                                     columnNumber: 25
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "w-16 h-24 bg-gray-200 rounded flex items-center justify-center",
@@ -557,17 +606,17 @@ function ImportBooksPage() {
                                                         className: "w-6 h-6 text-gray-400"
                                                     }, void 0, false, {
                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                        lineNumber: 361,
+                                                        lineNumber: 386,
                                                         columnNumber: 27
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                    lineNumber: 360,
+                                                    lineNumber: 385,
                                                     columnNumber: 25
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 352,
+                                                lineNumber: 377,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -584,7 +633,7 @@ function ImportBooksPage() {
                                                                         children: book.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                        lineNumber: 369,
+                                                                        lineNumber: 394,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -592,13 +641,13 @@ function ImportBooksPage() {
                                                                         children: book.author
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                        lineNumber: 370,
+                                                                        lineNumber: 395,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                lineNumber: 368,
+                                                                lineNumber: 393,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -607,30 +656,30 @@ function ImportBooksPage() {
                                                                     className: "w-5 h-5 text-green-500"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                    lineNumber: 374,
+                                                                    lineNumber: 399,
                                                                     columnNumber: 29
                                                                 }, this) : book.searchStatus === 'not-found' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__["XCircle"], {
                                                                     className: "w-5 h-5 text-gray-300"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                    lineNumber: 376,
+                                                                    lineNumber: 401,
                                                                     columnNumber: 29
                                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader$3e$__["Loader"], {
                                                                     className: "w-5 h-5 animate-spin text-gray-400"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                    lineNumber: 378,
+                                                                    lineNumber: 403,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                lineNumber: 372,
+                                                                lineNumber: 397,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                        lineNumber: 367,
+                                                        lineNumber: 392,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -644,7 +693,7 @@ function ImportBooksPage() {
                                                                         children: book.status === 'READ' ? 'Read' : book.status === 'CURRENTLY_READING' ? 'Reading' : book.status === 'WANT_TO_READ' ? 'Want to Read' : 'DNF'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                        lineNumber: 385,
+                                                                        lineNumber: 410,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     book.rating > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -655,13 +704,13 @@ function ImportBooksPage() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                        lineNumber: 389,
+                                                                        lineNumber: 414,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                lineNumber: 384,
+                                                                lineNumber: 409,
                                                                 columnNumber: 25
                                                             }, this),
                                                             book.dateFinished && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -672,35 +721,35 @@ function ImportBooksPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                                lineNumber: 395,
+                                                                lineNumber: 420,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                        lineNumber: 383,
+                                                        lineNumber: 408,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 366,
+                                                lineNumber: 391,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                        lineNumber: 351,
+                                        lineNumber: 376,
                                         columnNumber: 19
                                     }, this)
                                 }, book.id, false, {
                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                    lineNumber: 342,
+                                    lineNumber: 367,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                            lineNumber: 340,
+                            lineNumber: 365,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -715,7 +764,7 @@ function ImportBooksPage() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                    lineNumber: 405,
+                                    lineNumber: 430,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$book$2d$tracker$2d$app$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -728,7 +777,7 @@ function ImportBooksPage() {
                                                 className: "w-5 h-5 animate-spin inline mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                                lineNumber: 421,
+                                                lineNumber: 446,
                                                 columnNumber: 21
                                             }, this),
                                             "Importing..."
@@ -736,30 +785,30 @@ function ImportBooksPage() {
                                     }, void 0, true) : `Import ${selectedCount} Books`
                                 }, void 0, false, {
                                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                                    lineNumber: 414,
+                                    lineNumber: 439,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                            lineNumber: 404,
+                            lineNumber: 429,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-                    lineNumber: 305,
+                    lineNumber: 307,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-            lineNumber: 253,
+            lineNumber: 255,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/book-tracker-app/src/app/import-books/page.tsx",
-        lineNumber: 252,
+        lineNumber: 254,
         columnNumber: 5
     }, this);
 }
