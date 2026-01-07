@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Search, LogOut, X, LayoutDashboard, Compass, User, Users, Library, Settings } from 'lucide-react';
+import { BookOpen, Search, LogOut, X, LayoutDashboard, Compass, User, Users, Library, Settings, Upload } from 'lucide-react';
 
 export default function Header() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -191,6 +191,16 @@ export default function Header() {
                       <div className="flex items-center gap-2">
                         <Settings className="h-4 w-4" />
                         Settings
+                      </div>
+                    </Link>
+                    <Link
+                      href="/import-books"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Upload className="h-4 w-4" />
+                        Import Books
                       </div>
                     </Link>
                     <button

@@ -254,8 +254,8 @@ export default function ImportBooksPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-teal-50/30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Import Books from Notion</h1>
-          <p className="text-lg text-gray-600">Upload your Notion CSV export to quickly add books to your library</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Import Books</h1>
+          <p className="text-lg text-gray-600">Upload a CSV file to quickly add books to your library</p>
         </div>
 
         {parsedBooks.length === 0 ? (
@@ -264,9 +264,9 @@ export default function ImportBooksPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full mb-4">
                 <Upload className="w-8 h-8 text-blue-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Notion CSV</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload CSV File</h2>
               <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                 Export your reading list from Notion as CSV and upload it here. We&apos;ll match each book with cover art and let you review before importing.
+                 Upload your reading list as a CSV file. We&apos;ll match each book with cover art and let you review before importing.
               </p>
 
               <label className="inline-block">
@@ -293,13 +293,10 @@ export default function ImportBooksPage() {
               </label>
 
               <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-900 font-medium mb-3">📋 How to export from Notion:</p>
-                <ol className="text-sm text-blue-800 space-y-2 text-left max-w-md mx-auto">
-                  <li>1. Open your Notion database</li>
-                  <li>2. Click the ⋯ menu (top right)</li>
-                  <li>3. Select &quot;Download&quot; → &quot;Markdown &amp; CSV&quot;</li>
-                  <li>4. Upload the CSV file here</li>
-                </ol>
+                <p className="text-sm text-blue-900 font-medium mb-3">📋 CSV Format</p>
+                <p className="text-sm text-blue-800 text-left max-w-md mx-auto">
+                  Your CSV should include columns for book title and author. Additional columns like ISBN, genre, or rating will be imported if available.
+                </p>
               </div>
             </div>
           </div>
