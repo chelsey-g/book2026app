@@ -328,7 +328,7 @@ export default function MyBooksPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent text-gray-900 bg-white"
           >
             <option value="date-added">Recently Added</option>
             <option value="title">Title A-Z</option>
@@ -337,7 +337,7 @@ export default function MyBooksPage() {
           <select
             value={itemsPerPage}
             onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent text-gray-900 bg-white"
           >
             <option value={10}>10 per page</option>
             <option value={25}>25 per page</option>
