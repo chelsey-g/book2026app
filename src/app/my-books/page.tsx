@@ -530,10 +530,10 @@ export default function MyBooksPage() {
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 rounded-lg transition-colors ${
+                      className={`px-3 py-2 rounded-lg border transition-colors ${
                         currentPage === page
-                          ? 'bg-[#018283] text-white'
-                          : 'border border-gray-300 hover:bg-gray-50'
+                          ? 'bg-[#018283] text-white border-[#018283]'
+                          : 'border-gray-300 hover:bg-teal-50 hover:border-teal-300'
                       }`}
                     >
                       {page}
