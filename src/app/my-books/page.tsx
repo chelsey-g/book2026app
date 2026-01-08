@@ -58,8 +58,11 @@ export default function MyBooksPage() {
 
   useEffect(() => {
     filterAndSortBooks();
-    setCurrentPage(1); // Reset to page 1 when filters change
   }, [userBooks, selectedShelf, searchTerm, sortBy]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedShelf, searchTerm, sortBy]);
 
   const fetchUserBooks = async () => {
     try {
