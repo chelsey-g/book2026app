@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
-import { BookOpen, Star, Trash2, Edit2, Search, ChevronDown, BookMarked, Circle, CheckCircle, Clock, XCircle, Star as StarIcon, Upload } from 'lucide-react';
+import { BookOpen, Star, Trash2, Edit2, Search, ChevronDown, BookMarked, Circle, CheckCircle, Clock, XCircle, Star as StarIcon } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -257,18 +257,9 @@ export default function MyBooksPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-teal-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">My Books</h1>
-            <p className="text-gray-600">Manage and organize your reading library</p>
-          </div>
-          <Link
-            href="/import-books"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#018283] text-white rounded-lg hover:bg-[#017374] transition-colors self-start"
-          >
-            <Upload className="w-5 h-5" />
-            Import from Notion
-          </Link>
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Books</h1>
+          <p className="text-gray-600">Manage and organize your reading library</p>
         </div>
 
         {/* Stats */}
@@ -471,20 +462,12 @@ export default function MyBooksPage() {
                    ? "Mark books as read to see them here"
                    : "Books you haven't finished will appear here"}
                </p>
-               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                 <Link
-                   href="/discover"
-                   className="px-6 py-3 bg-[#018283] text-white rounded-lg hover:bg-[#017374] transition-colors font-medium"
-                 >
-                   Discover Books
-                 </Link>
-                 <Link
-                   href="/import-books"
-                   className="px-6 py-3 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-                 >
-                   Import from Notion
-                 </Link>
-               </div>
+                <Link
+                  href="/discover"
+                  className="inline-block px-6 py-3 bg-[#018283] text-white rounded-lg hover:bg-[#017374] transition-colors font-medium"
+                >
+                  Discover Books
+                </Link>
              </div>
            )}
         </div>
