@@ -502,11 +502,7 @@ export default function MyBooksPage() {
 
         {/* Pagination Controls */}
         {filteredBooks.length > 0 && totalPages > 1 && (
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredBooks.length)} of {filteredBooks.length} books
-            </div>
-            
+          <div className="mt-6 flex flex-col items-center gap-3">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
@@ -552,6 +548,10 @@ export default function MyBooksPage() {
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
+            </div>
+            
+            <div className="text-sm text-gray-600">
+              Showing {startIndex + 1} to {Math.min(endIndex, filteredBooks.length)} of {filteredBooks.length} books
             </div>
           </div>
         )}
