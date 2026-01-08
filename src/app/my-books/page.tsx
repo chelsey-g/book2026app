@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
-import { BookOpen, Star, Trash2, Edit2, Search, ChevronDown, BookMarked, Circle, CheckCircle, Clock, XCircle, Star as StarIcon } from 'lucide-react';
+import { BookOpen, Star, Trash2, Edit2, Search, ChevronDown, BookMarked, Circle, CheckCircle, Clock, XCircle, Star as StarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -40,6 +40,8 @@ export default function MyBooksPage() {
   const [sortBy, setSortBy] = useState('date-added');
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [ratingHoverId, setRatingHoverId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const shelves = [
     { id: 'WANT_TO_READ', label: 'Want to Read', color: 'bg-blue-50' },
@@ -56,6 +58,7 @@ export default function MyBooksPage() {
 
   useEffect(() => {
     filterAndSortBooks();
+    setCurrentPage(1); // Reset to page 1 when filters change
   }, [userBooks, selectedShelf, searchTerm, sortBy]);
 
   const fetchUserBooks = async () => {
@@ -195,6 +198,21 @@ export default function MyBooksPage() {
     count: userBooks.filter(b => b.status === shelf.id).length,
   }));
 
+  const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedBooks = filteredBooks.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
+
   const StatusIcon = ({ status }: { status: string }) => {
     switch (status) {
       case 'WANT_TO_READ':
@@ -313,6 +331,16 @@ export default function MyBooksPage() {
             <option value="title">Title A-Z</option>
             <option value="author">Author A-Z</option>
           </select>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent"
+          >
+            <option value={10}>10 per page</option>
+            <option value={25}>25 per page</option>
+            <option value={50}>50 per page</option>
+            <option value={100}>100 per page</option>
+          </select>
         </div>
 
         {/* Books List */}
@@ -330,8 +358,8 @@ export default function MyBooksPage() {
                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Actions</th>
                    </tr>
                  </thead>
-                <tbody>
-                  {filteredBooks.map((userBook, idx) => (
+                 <tbody>
+                   {paginatedBooks.map((userBook, idx) => (
                     <tr key={userBook.id} className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
                        <td className="px-6 py-4">
                          <Link
@@ -445,7 +473,7 @@ export default function MyBooksPage() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+               </table>
             </div>
            ) : (
              <div className="text-center py-16">
@@ -471,6 +499,64 @@ export default function MyBooksPage() {
              </div>
            )}
         </div>
+
+        {/* Pagination Controls */}
+        {filteredBooks.length > 0 && totalPages > 1 && (
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  let page;
+                  if (totalPages <= 5) {
+                    page = i + 1;
+                  } else if (currentPage <= 3) {
+                    page = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    page = totalPages - 4 + i;
+                  } else {
+                    page = currentPage - 2 + i;
+                  }
+                  
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`min-w-[40px] px-3 py-2 rounded-lg border transition-colors ${
+                        currentPage === page
+                          ? 'bg-[#018283] text-white border-[#018283] font-semibold'
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-900'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Next page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="text-sm text-gray-600">
+              Showing {startIndex + 1} to {Math.min(endIndex, filteredBooks.length)} of {filteredBooks.length} books
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
