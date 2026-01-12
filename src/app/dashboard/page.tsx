@@ -5,8 +5,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BookOpen, Star, Target, Bookmark, Clock, Award, Search, TrendingUp, Flame } from 'lucide-react';
+import { BookOpen, Star, Target, Bookmark, Clock, Award, Search, TrendingUp, Flame, Plus } from 'lucide-react';
 import BookCard from '@/components/BookCard';
+import ReadingCheckinModal from '@/components/ReadingCheckinModal';
 import { StatCardSkeleton, ChartSkeletonLoader } from '@/components/Skeleton';
 import {
   LineChart,
@@ -138,6 +139,7 @@ export default function Dashboard() {
     thisMonthBooks: 0,
     thisYearBooks: 0,
   });
+  const [showCheckinModal, setShowCheckinModal] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -453,18 +455,61 @@ export default function Dashboard() {
             {/* Reading Streak & Top Books */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
               {/* Reading Streak Card */}
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-bold text-lg text-gray-900">Reading Streak</h4>
-                  <Flame className="h-5 w-5 text-orange-500" />
+              <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-200">
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-50 rounded-full mb-4">
+                    <Flame className="h-8 w-8 text-orange-500" />
+                  </div>
+                  <h4 className="font-bold text-xl text-gray-900 mb-2">Reading Streak</h4>
+                  <p className="text-sm text-gray-500">Consecutive days of reading</p>
                 </div>
-                <div className="flex items-center">
-                  <div className="text-5xl font-bold text-orange-500">{statistics.readingStreak}</div>
-                  <div className="ml-4">
-                    <p className="text-sm text-gray-600">Consecutive days of reading</p>
-                    <p className="text-xs text-gray-500 mt-1">Keep it up!</p>
+                
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-baseline gap-2">
+                    <span className="text-7xl font-bold text-orange-500 leading-none">{statistics.readingStreak}</span>
+                    <span className="text-2xl text-gray-400 font-medium">{statistics.readingStreak === 1 ? 'day' : 'days'}</span>
                   </div>
                 </div>
+                
+                {statistics.readingStreak === 0 ? (
+                  <div className="space-y-4">
+                    <div className="text-center py-4">
+                      <p className="text-sm text-gray-600 mb-1">Start your reading journey</p>
+                      <p className="text-xs text-gray-500">Log your first reading session to begin!</p>
+                    </div>
+                    <button
+                      onClick={() => setShowCheckinModal(true)}
+                      className="w-full px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <Plus className="h-5 w-5" />
+                      Log Today&apos;s Reading
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="text-center py-3 bg-gray-50 rounded-lg">
+                      <p className="text-sm font-semibold text-gray-900 mb-1">
+                        {statistics.readingStreak >= 30 ? '🔥 Amazing!' : 
+                         statistics.readingStreak >= 14 ? '🌟 Excellent!' : 
+                         statistics.readingStreak >= 7 ? '✨ Great progress!' : 
+                         '💪 Keep going!'}
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        {statistics.readingStreak >= 30 ? 'You&apos;ve maintained a 30+ day streak!' : 
+                         statistics.readingStreak >= 14 ? 'Two weeks of consistent reading' : 
+                         statistics.readingStreak >= 7 ? 'One week milestone reached' : 
+                         'Building your reading habit'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowCheckinModal(true)}
+                      className="w-full px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <Plus className="h-5 w-5" />
+                      Log Today&apos;s Reading
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Top Rated Books */}
@@ -502,11 +547,18 @@ export default function Dashboard() {
           <div className="lg:col-span-2 space-y-8">
             {/* Currently Reading Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                   <Clock className="h-5 w-5 text-cyan-600" />
                   Currently Reading
                 </h3>
+                <button
+                  onClick={() => setShowCheckinModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors text-sm font-medium"
+                >
+                  <Plus className="h-4 w-4" />
+                  Log Reading
+                </button>
               </div>
               <div className="p-6">
                 {currentlyReading.length > 0 ? (
@@ -642,6 +694,37 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Reading Check-in Modal */}
+      <ReadingCheckinModal
+        isOpen={showCheckinModal}
+        onClose={() => setShowCheckinModal(false)}
+        currentlyReadingBooks={currentlyReading.map((book) => ({
+          id: book.id,
+          book_id: book.id,
+          title: book.title,
+          author: book.author,
+          cover_url: book.cover,
+        }))}
+        onCheckinComplete={async () => {
+          setShowCheckinModal(false);
+          // Refresh statistics to update the streak
+          try {
+            const { data: { session } } = await import('@/lib/supabase/client').then(m => m.supabase.auth.getSession());
+            if (session?.access_token) {
+              const statsResponse = await fetch('/api/statistics', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` },
+              });
+              const statsData = await statsResponse.json();
+              if (!statsData.error) {
+                setStatistics(statsData);
+              }
+            }
+          } catch (error) {
+            console.error('Error refreshing statistics:', error);
+          }
+        }}
+      />
     </div>
   );
 }
