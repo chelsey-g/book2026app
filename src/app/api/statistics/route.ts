@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface MonthlyTrend {
@@ -92,11 +92,14 @@ export async function GET(request: NextRequest) {
     // Cast the data, accounting for Supabase's response format
     const userBooks: UserBook[] = (data || []) as unknown as UserBook[];
 
+    // Calculate reading streak from check-ins (independent of completed books)
+    const readingStreak = await calculateReadingStreak(supabase, user.id);
+
     if (!userBooks || userBooks.length === 0) {
       return NextResponse.json({
         yearlyTrends: generateEmptyMonths(),
         genreBreakdown: [],
-        readingStreak: 0,
+        readingStreak,
         topRatedBooks: [],
         totalBooksRead: 0,
         totalPagesRead: 0,
@@ -121,15 +124,43 @@ export async function GET(request: NextRequest) {
       );
     });
 
-    const yearlyTrends = generateMonthlyTrends(yearlyBooks);
+    // Fetch reading checkins for the current year
+    const { data: checkins, error: checkinsError } = await supabase
+      .from('reading_checkins')
+      .select('checkin_date, pages_read')
+      .eq('user_id', user.id)
+      .gte('checkin_date', `${currentYear}-01-01`)
+      .lte('checkin_date', `${currentYear}-12-31`);
+
+    if (checkinsError) {
+      console.error('Error fetching checkins:', checkinsError);
+    }
+
+    const yearlyTrends = generateMonthlyTrends(yearlyBooks, checkins || []);
     const genreBreakdown = generateGenreBreakdown(userBooks);
-    const readingStreak = calculateReadingStreak(userBooks);
     const topRatedBooks = getTopRatedBooks(userBooks, 5);
 
-    const totalPagesRead = userBooks.reduce(
+    // Calculate total pages from completed books
+    const pagesFromBooks = userBooks.reduce(
       (sum, ub) => sum + (ub.books?.page_count || 0),
       0
     );
+
+    // Calculate total pages from checkins
+    const { data: allCheckins } = await supabase
+      .from('reading_checkins')
+      .select('pages_read')
+      .eq('user_id', user.id);
+
+    const pagesFromCheckins = (allCheckins || []).reduce(
+      (sum, checkin) => sum + (checkin.pages_read || 0),
+      0
+    );
+
+    // Total pages is the sum of both (avoiding double counting if a book was completed and also had checkins)
+    // For now, we'll use the larger value or sum them - but typically checkins are for in-progress books
+    // So we'll sum them to get total reading activity
+    const totalPagesRead = pagesFromBooks + pagesFromCheckins;
 
     const averageRating =
       userBooks.length > 0
@@ -180,18 +211,30 @@ function generateEmptyMonths(): MonthlyTrend[] {
   }));
 }
 
-function generateMonthlyTrends(books: UserBook[]): MonthlyTrend[] {
+function generateMonthlyTrends(
+  books: UserBook[],
+  checkins: Array<{ checkin_date: string; pages_read: number }> = []
+): MonthlyTrend[] {
   const monthlyData: Record<number, { books: number; pages: number }> = {};
 
   for (let i = 0; i < 12; i++) {
     monthlyData[i] = { books: 0, pages: 0 };
   }
 
+  // Add pages from completed books
   books.forEach((userBook) => {
     if (userBook.completed_at) {
       const month = new Date(userBook.completed_at).getMonth();
       monthlyData[month].books += 1;
       monthlyData[month].pages += userBook.books?.page_count || 0;
+    }
+  });
+
+  // Add pages from reading checkins
+  checkins.forEach((checkin) => {
+    if (checkin.checkin_date && checkin.pages_read) {
+      const month = new Date(checkin.checkin_date).getMonth();
+      monthlyData[month].pages += checkin.pages_read;
     }
   });
 
@@ -242,35 +285,46 @@ function generateGenreBreakdown(books: UserBook[]): GenreStats[] {
     .slice(0, 8);
 }
 
-function calculateReadingStreak(books: UserBook[]): number {
-  if (books.length === 0) return 0;
+async function calculateReadingStreak(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<number> {
+  // Fetch distinct check-in dates for user, ordered descending
+  const { data: checkins, error } = await supabase
+    .from('reading_checkins')
+    .select('checkin_date')
+    .eq('user_id', userId)
+    .order('checkin_date', { ascending: false });
 
-  let streak = 0;
+  if (error || !checkins || checkins.length === 0) return 0;
+
+  // Get unique dates (in case multiple check-ins on same day)
+  const uniqueDates = [...new Set(checkins.map((c) => c.checkin_date))];
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().split('T')[0];
 
-  const sortedBooks = [...books].sort((a, b) => {
-    const dateA = a.completed_at
-      ? new Date(a.completed_at)
-      : new Date(0);
-    const dateB = b.completed_at
-      ? new Date(b.completed_at)
-      : new Date(0);
-    return dateB.getTime() - dateA.getTime();
-  });
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-  const currentDate = new Date(today);
+  // Streak must include today or yesterday to be active
+  const latestCheckin = uniqueDates[0];
+  if (latestCheckin !== todayStr && latestCheckin !== yesterdayStr) {
+    return 0;
+  }
 
-  for (const book of sortedBooks) {
-    if (!book.completed_at) continue;
+  let streak = 0;
+  const currentDate = new Date(latestCheckin);
 
-    const bookDate = new Date(book.completed_at);
-    bookDate.setHours(0, 0, 0, 0);
+  for (const dateStr of uniqueDates) {
+    const expectedDateStr = currentDate.toISOString().split('T')[0];
 
-    if (bookDate.getTime() === currentDate.getTime()) {
-      streak += 1;
+    if (dateStr === expectedDateStr) {
+      streak++;
       currentDate.setDate(currentDate.getDate() - 1);
-    } else if (bookDate.getTime() < currentDate.getTime()) {
+    } else {
       break;
     }
   }
