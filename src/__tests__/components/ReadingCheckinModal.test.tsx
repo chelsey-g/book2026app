@@ -228,7 +228,7 @@ describe('ReadingCheckinModal', () => {
       await user.click(screen.getByText('Select a book...'));
 
       expect(screen.getByText('No books in progress')).toBeInTheDocument();
-      expect(screen.getByText('Start reading a book first!')).toBeInTheDocument();
+      expect(screen.getByText('Search for a book to log reading')).toBeInTheDocument();
     });
 
     it('selects book when clicked', async () => {
