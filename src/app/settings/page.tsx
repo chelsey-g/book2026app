@@ -25,6 +25,8 @@ export default function Settings() {
   const { user, loading: authLoading, signOut } = useAuth();
   const { currentTheme, setTheme } = useTheme();
   const [emailNotifications, setEmailNotifications] = useState(true);
+  const [searchHistoryEnabled, setSearchHistoryEnabled] = useState(true);
+  const [clearHistoryLoading, setClearHistoryLoading] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [accountForm, setAccountForm] = useState<AccountFormState>({
     username: '',
@@ -69,6 +71,60 @@ export default function Settings() {
      localStorage.setItem('emailNotifications', enabled.toString());
      setShowSaved(true);
      setTimeout(() => setShowSaved(false), 2000);
+   };
+
+   const handleSearchHistoryToggle = async (enabled: boolean) => {
+     setSearchHistoryEnabled(enabled);
+
+     try {
+       const { data: { session } } = await (await import('@/lib/supabase/client')).supabase.auth.getSession();
+       const token = session?.access_token;
+
+       if (!token) return;
+
+       await fetch('/api/users/profile', {
+         method: 'PATCH',
+         headers: {
+           'Content-Type': 'application/json',
+           'Authorization': `Bearer ${token}`
+         },
+         body: JSON.stringify({ searchHistoryEnabled: enabled })
+       });
+
+       setShowSaved(true);
+       setTimeout(() => setShowSaved(false), 2000);
+     } catch (error) {
+       console.error('Failed to update search history preference:', error);
+       setSearchHistoryEnabled(!enabled); // Revert on error
+     }
+   };
+
+   const handleClearHistory = async () => {
+     if (!confirm('Are you sure you want to clear all search history? This cannot be undone.')) {
+       return;
+     }
+
+     setClearHistoryLoading(true);
+     try {
+       const { data: { session } } = await (await import('@/lib/supabase/client')).supabase.auth.getSession();
+       const token = session?.access_token;
+
+       if (!token) return;
+
+       const response = await fetch('/api/search-history', {
+         method: 'DELETE',
+         headers: { 'Authorization': `Bearer ${token}` }
+       });
+
+       if (response.ok) {
+         alert('Search history cleared successfully');
+       }
+     } catch (error) {
+       console.error('Failed to clear history:', error);
+       alert('Failed to clear search history');
+     } finally {
+       setClearHistoryLoading(false);
+     }
    };
 
     const handleSignOut = async () => {
@@ -323,6 +379,41 @@ export default function Settings() {
                  />
                </button>
              </div>
+
+             <div className="flex items-center justify-between pb-6 border-b border-gray-200">
+               <div>
+                 <h3 className="font-semibold text-gray-900">Search History</h3>
+                 <p className="text-sm text-gray-600 mt-1">Save your search queries for quick access</p>
+               </div>
+               <button
+                 onClick={() => handleSearchHistoryToggle(!searchHistoryEnabled)}
+                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                   searchHistoryEnabled ? 'bg-teal-600' : 'bg-gray-300'
+                 }`}
+               >
+                 <span
+                   className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                     searchHistoryEnabled ? 'translate-x-6' : 'translate-x-1'
+                   }`}
+                 />
+               </button>
+             </div>
+
+             {searchHistoryEnabled && (
+               <div className="pb-6 border-b border-gray-200">
+                 <h3 className="font-semibold text-gray-900 mb-2">Clear Search History</h3>
+                 <p className="text-sm text-gray-600 mb-4">
+                   Permanently delete all saved searches
+                 </p>
+                 <button
+                   onClick={handleClearHistory}
+                   disabled={clearHistoryLoading}
+                   className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors font-medium disabled:opacity-50"
+                 >
+                   {clearHistoryLoading ? 'Clearing...' : 'Clear All Searches'}
+                 </button>
+               </div>
+             )}
 
              {showSaved && (
                <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-sm">

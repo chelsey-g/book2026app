@@ -6,11 +6,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BookOpen, Search, LogOut, X, LayoutDashboard, Compass, User, Users, Library, Settings, Upload } from 'lucide-react';
 
+interface SearchHistory {
+  id: string;
+  query: string;
+  searched_at: string;
+}
+
 export default function Header() {
   const { user, signOut, loading: authLoading } = useAuth();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -36,6 +44,50 @@ export default function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (showSearch && user) {
+      fetchSearchHistory();
+    }
+  }, [showSearch, user]);
+
+  const fetchSearchHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const { supabase } = await import('@/lib/supabase/client');
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+
+      const response = await fetch('/api/search-history?limit=5', {
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      });
+      const data = await response.json();
+      setSearchHistory(data.searches || []);
+    } catch (error) {
+      console.error('Failed to fetch search history:', error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const saveSearchQuery = async (query: string) => {
+    try {
+      const { supabase } = await import('@/lib/supabase/client');
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+
+      await fetch('/api/search-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ query })
+      });
+    } catch (error) {
+      console.error('Failed to save search history:', error);
+    }
+  };
 
   if (authLoading || !user || pathname === '/' || pathname.startsWith('/auth/')) {
     return null;
@@ -235,15 +287,16 @@ export default function Header() {
                     placeholder="Search for books, authors, or ISBN..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
+                    onKeyDown={async (e) => {
                       if (e.key === 'Enter' && searchQuery.trim()) {
+                        await saveSearchQuery(searchQuery.trim());
                         window.location.href = `/discover?q=${encodeURIComponent(searchQuery.trim())}`;
                       }
                     }}
                     autoFocus
                     className="
-                      w-full pl-12 pr-4 py-3 
-                      border border-gray-200 rounded-xl 
+                      w-full pl-12 pr-4 py-3
+                      border border-gray-200 rounded-xl
                       focus:outline-none focus:ring-2 focus:ring-[#018283]/20 focus:border-[#018283]
                       bg-gray-50/50 focus:bg-white
                       transition-all duration-200
@@ -265,6 +318,32 @@ export default function Header() {
                   <X className="h-5 w-5" />
                 </button>
               </div>
+
+              {!searchQuery && searchHistory.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">Recent Searches</h3>
+                  <div className="space-y-1">
+                    {searchHistory.map((search) => (
+                      <button
+                        key={search.id}
+                        onClick={async () => {
+                          await saveSearchQuery(search.query);
+                          window.location.href = `/discover?q=${encodeURIComponent(search.query)}`;
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors flex items-center group"
+                      >
+                        <Search className="h-4 w-4 text-gray-400 mr-2 group-hover:text-[#018283]" />
+                        <span className="group-hover:text-[#018283]">{search.query}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!searchQuery && searchHistory.length === 0 && !historyLoading && (
+                <p className="mt-4 text-sm text-gray-500">No recent searches</p>
+              )}
+
               <p className="text-xs text-gray-500 mt-3 flex items-center">
                 <kbd className="px-2 py-1 bg-gray-100 border border-gray-200 rounded text-xs font-mono mr-2">Enter</kbd>
                 to search

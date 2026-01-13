@@ -21,11 +21,11 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { username, currentPassword, newPassword } = body
+    const { username, currentPassword, newPassword, searchHistoryEnabled } = body
 
-    if (!username && !newPassword) {
+    if (!username && !newPassword && searchHistoryEnabled === undefined) {
       return NextResponse.json(
-        { error: 'Please provide username or new password' },
+        { error: 'Please provide username, new password, or preference to update' },
         { status: 400 }
       )
     }
@@ -89,6 +89,28 @@ export async function PATCH(request: NextRequest) {
         console.error('Username update error:', updateError)
         return NextResponse.json(
           { error: 'Failed to update username' },
+          { status: 500 }
+        )
+      }
+    }
+
+    if (searchHistoryEnabled !== undefined) {
+      if (typeof searchHistoryEnabled !== 'boolean') {
+        return NextResponse.json(
+          { error: 'searchHistoryEnabled must be a boolean' },
+          { status: 400 }
+        )
+      }
+
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ search_history_enabled: searchHistoryEnabled })
+        .eq('id', user.id)
+
+      if (updateError) {
+        console.error('Search history preference update error:', updateError)
+        return NextResponse.json(
+          { error: 'Failed to update search history preference' },
           { status: 500 }
         )
       }
