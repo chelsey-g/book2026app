@@ -28,6 +28,12 @@ interface FilterOptions {
   yearRange: string;
 }
 
+interface SearchHistory {
+  id: string;
+  query: string;
+  searched_at: string;
+}
+
 export default function DiscoverPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
@@ -44,6 +50,8 @@ export default function DiscoverPage() {
   const [userBooks, setUserBooks] = useState<{ [key: string]: string }>({});
   const [timeframe, setTimeframe] = useState('all');
   const [searchError, setSearchError] = useState('');
+  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
+  const [showSearchHistory, setShowSearchHistory] = useState(false);
   const { user } = useAuth();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -116,10 +124,50 @@ export default function DiscoverPage() {
       }
 
       setBooks(data.books || []);
+
+      // Save search query to history
+      if (query && user) {
+        await saveSearchQuery(query);
+      }
     } catch (error) {
       console.error('Search error:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSearchHistory = async () => {
+    if (!user) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+
+      const response = await fetch('/api/search-history?limit=10', {
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      });
+      const data = await response.json();
+      setSearchHistory(data.searches || []);
+    } catch (error) {
+      console.error('Failed to fetch search history:', error);
+    }
+  };
+
+  const saveSearchQuery = async (query: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+
+      await fetch('/api/search-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ query })
+      });
+    } catch (error) {
+      console.error('Failed to save search history:', error);
     }
   };
 
@@ -320,6 +368,7 @@ export default function DiscoverPage() {
                    onChange={(e) => {
                      setInputValue(e.target.value);
                      setSearchError('');
+                     setShowSearchHistory(false);
 
                      if (debounceTimer.current) {
                        clearTimeout(debounceTimer.current);
@@ -340,6 +389,15 @@ export default function DiscoverPage() {
                        setSearchError('Please enter a search term');
                        e.preventDefault();
                      }
+                   }}
+                   onFocus={() => {
+                     if (!inputValue && user) {
+                       fetchSearchHistory();
+                       setShowSearchHistory(true);
+                     }
+                   }}
+                   onBlur={() => {
+                     setTimeout(() => setShowSearchHistory(false), 200);
                    }}
                    placeholder="Search for books, authors, or ISBN..."
                    className="flex-1 px-4 py-5 text-lg bg-transparent focus:outline-none placeholder-gray-400 text-gray-900"
@@ -392,6 +450,34 @@ export default function DiscoverPage() {
                <div className="mt-3 text-sm text-red-600 flex items-center gap-2">
                  <span>⚠️</span>
                  <span>{searchError}</span>
+               </div>
+             )}
+
+             {/* Search History Dropdown */}
+             {showSearchHistory && searchHistory.length > 0 && !inputValue && (
+               <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl z-10 overflow-hidden">
+                 <div className="p-4">
+                   <div className="flex items-center justify-between mb-3">
+                     <h3 className="text-sm font-semibold text-gray-700">Recent Searches</h3>
+                   </div>
+                   <div className="space-y-1">
+                     {searchHistory.map((search) => (
+                       <button
+                         key={search.id}
+                         onClick={async () => {
+                           await saveSearchQuery(search.query);
+                           window.location.href = `/discover?q=${encodeURIComponent(search.query)}`;
+                         }}
+                         className="w-full text-left px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors flex items-center justify-between group"
+                       >
+                         <div className="flex items-center flex-1">
+                           <Search className="h-4 w-4 text-gray-400 mr-3 group-hover:text-[#018283]" />
+                           <span className="group-hover:text-[#018283]">{search.query}</span>
+                         </div>
+                       </button>
+                     ))}
+                   </div>
+                 </div>
                </div>
              )}
            </div>
