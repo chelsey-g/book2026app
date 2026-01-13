@@ -19,6 +19,7 @@ export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -50,6 +51,29 @@ export default function Header() {
       fetchSearchHistory();
     }
   }, [showSearch, user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+    }
+  }, [user]);
+
+  const fetchUserProfile = async () => {
+    try {
+      const { supabase } = await import('@/lib/supabase/client');
+      const { data, error } = await supabase
+        .from('users')
+        .select('name')
+        .eq('id', user?.id)
+        .single();
+
+      if (!error && data?.name) {
+        setUserName(data.name);
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error);
+    }
+  };
 
   const fetchSearchHistory = async () => {
     setHistoryLoading(true);
@@ -211,12 +235,12 @@ export default function Header() {
                 >
                   <div className="relative">
                     <div className="w-8 h-8 bg-gradient-to-br from-[#018283] to-[#2CAED8] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-sm group-hover:shadow-md transition-all duration-200">
-                      {user.user_metadata?.name?.[0] || 'U'}
+                      {userName?.[0] || user.user_metadata?.name?.[0] || 'U'}
                     </div>
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-[#018283]/20 to-[#2CAED8]/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <span className="text-sm text-gray-700 font-medium hidden sm:inline">
-                    {user.user_metadata?.name?.split(' ')[0] || 'User'}
+                    {userName?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || 'User'}
                   </span>
                   <svg className={`h-4 w-4 text-gray-400 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
