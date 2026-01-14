@@ -63,6 +63,10 @@ export default function MyBooksPage() {
 
   useEffect(() => {
     setCurrentPage(1);
+    // Reset year filter when switching away from READ tab
+    if (selectedShelf !== 'READ') {
+      setSelectedYear('all');
+    }
   }, [selectedShelf, searchTerm, sortBy, selectedYear]);
 
   const fetchUserBooks = async () => {
@@ -99,8 +103,8 @@ export default function MyBooksPage() {
       );
     }
 
-    // Filter by year
-    if (selectedYear !== 'all') {
+    // Filter by year (only on READ tab)
+    if (selectedShelf === 'READ' && selectedYear !== 'all') {
       filtered = filtered.filter(book => {
         const bookYear = new Date(book.created_at).getFullYear().toString();
         return bookYear === selectedYear;
@@ -207,15 +211,12 @@ export default function MyBooksPage() {
      }
    };
 
-  // Get unique years from user's books and include current year
-  const currentYear = new Date().getFullYear();
-  const yearsFromBooks = Array.from(
-    new Set(
-      userBooks.map(book => new Date(book.created_at).getFullYear())
-    )
-  );
+  // Get unique years from READ books only (based on actual data)
+  const readBooks = userBooks.filter(book => book.status === 'READ');
   const availableYears = Array.from(
-    new Set([currentYear, ...yearsFromBooks])
+    new Set(
+      readBooks.map(book => new Date(book.created_at).getFullYear())
+    )
   ).sort((a, b) => b - a); // Most recent first
 
   const shelfStats = shelves.map(shelf => ({
@@ -360,19 +361,21 @@ export default function MyBooksPage() {
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#018283] pointer-events-none" />
           </div>
-          <div className="relative">
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-2 border-2 border-[#018283] rounded-lg focus:ring-2 focus:ring-[#018283]/20 focus:border-[#018283] text-gray-900 bg-white cursor-pointer"
-            >
-              <option value="all">All Years</option>
-              {availableYears.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#018283] pointer-events-none" />
-          </div>
+          {selectedShelf === 'READ' && (
+            <div className="relative">
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                className="appearance-none pl-4 pr-10 py-2 border-2 border-[#018283] rounded-lg focus:ring-2 focus:ring-[#018283]/20 focus:border-[#018283] text-gray-900 bg-white cursor-pointer"
+              >
+                <option value="all">All Years</option>
+                {availableYears.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#018283] pointer-events-none" />
+            </div>
+          )}
           <div className="relative">
             <select
               value={itemsPerPage}
