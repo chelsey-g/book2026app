@@ -103,10 +103,11 @@ export default function MyBooksPage() {
       );
     }
 
-    // Filter by year (only on READ tab)
+    // Filter by year (only on READ tab, based on Date Finished)
     if (selectedShelf === 'READ' && selectedYear !== 'all') {
       filtered = filtered.filter(book => {
-        const bookYear = new Date(book.created_at).getFullYear().toString();
+        if (!book.completed_at) return false;
+        const bookYear = new Date(book.completed_at).getFullYear().toString();
         return bookYear === selectedYear;
       });
     }
@@ -211,11 +212,11 @@ export default function MyBooksPage() {
      }
    };
 
-  // Get unique years from READ books only (based on actual data)
-  const readBooks = userBooks.filter(book => book.status === 'READ');
+  // Get unique years from READ books only (based on Date Finished)
+  const readBooks = userBooks.filter(book => book.status === 'READ' && book.completed_at);
   const availableYears = Array.from(
     new Set(
-      readBooks.map(book => new Date(book.created_at).getFullYear())
+      readBooks.map(book => new Date(book.completed_at!).getFullYear())
     )
   ).sort((a, b) => b - a); // Most recent first
 
