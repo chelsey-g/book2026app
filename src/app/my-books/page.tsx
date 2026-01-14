@@ -42,6 +42,7 @@ export default function MyBooksPage() {
   const [ratingHoverId, setRatingHoverId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedYear, setSelectedYear] = useState<string>('all');
 
   const shelves = [
     { id: 'WANT_TO_READ', label: 'Want to Read', color: 'bg-blue-50' },
@@ -58,11 +59,11 @@ export default function MyBooksPage() {
 
   useEffect(() => {
     filterAndSortBooks();
-  }, [userBooks, selectedShelf, searchTerm, sortBy]);
+  }, [userBooks, selectedShelf, searchTerm, sortBy, selectedYear]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedShelf, searchTerm, sortBy]);
+  }, [selectedShelf, searchTerm, sortBy, selectedYear]);
 
   const fetchUserBooks = async () => {
     try {
@@ -96,6 +97,14 @@ export default function MyBooksPage() {
         book.books?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         book.books?.author?.toLowerCase().includes(searchTerm.toLowerCase())
       );
+    }
+
+    // Filter by year
+    if (selectedYear !== 'all') {
+      filtered = filtered.filter(book => {
+        const bookYear = new Date(book.created_at).getFullYear().toString();
+        return bookYear === selectedYear;
+      });
     }
 
     filtered.sort((a, b) => {
@@ -197,6 +206,17 @@ export default function MyBooksPage() {
        alert('Failed to update rating');
      }
    };
+
+  // Get unique years from user's books and include current year
+  const currentYear = new Date().getFullYear();
+  const yearsFromBooks = Array.from(
+    new Set(
+      userBooks.map(book => new Date(book.created_at).getFullYear())
+    )
+  );
+  const availableYears = Array.from(
+    new Set([currentYear, ...yearsFromBooks])
+  ).sort((a, b) => b - a); // Most recent first
 
   const shelfStats = shelves.map(shelf => ({
     ...shelf,
@@ -327,26 +347,45 @@ export default function MyBooksPage() {
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent text-gray-900"
             />
           </div>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent text-gray-900 bg-white"
-          >
-            <option value="date-added-desc">Newest First</option>
-            <option value="date-added-asc">Oldest First</option>
-            <option value="title">Title A-Z</option>
-            <option value="author">Author A-Z</option>
-          </select>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent text-gray-900 bg-white"
-          >
-            <option value={10}>10 per page</option>
-            <option value={25}>25 per page</option>
-            <option value={50}>50 per page</option>
-            <option value={100}>100 per page</option>
-          </select>
+          <div className="relative">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="appearance-none pl-4 pr-10 py-2 border-2 border-[#018283] rounded-lg focus:ring-2 focus:ring-[#018283]/20 focus:border-[#018283] text-gray-900 bg-white cursor-pointer"
+            >
+              <option value="date-added-desc">Newest First</option>
+              <option value="date-added-asc">Oldest First</option>
+              <option value="title">Title A-Z</option>
+              <option value="author">Author A-Z</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#018283] pointer-events-none" />
+          </div>
+          <div className="relative">
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="appearance-none pl-4 pr-10 py-2 border-2 border-[#018283] rounded-lg focus:ring-2 focus:ring-[#018283]/20 focus:border-[#018283] text-gray-900 bg-white cursor-pointer"
+            >
+              <option value="all">All Years</option>
+              {availableYears.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#018283] pointer-events-none" />
+          </div>
+          <div className="relative">
+            <select
+              value={itemsPerPage}
+              onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+              className="appearance-none pl-4 pr-10 py-2 border-2 border-[#018283] rounded-lg focus:ring-2 focus:ring-[#018283]/20 focus:border-[#018283] text-gray-900 bg-white cursor-pointer"
+            >
+              <option value={10}>10 per page</option>
+              <option value={25}>25 per page</option>
+              <option value={50}>50 per page</option>
+              <option value={100}>100 per page</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#018283] pointer-events-none" />
+          </div>
         </div>
 
         {/* Books List */}
