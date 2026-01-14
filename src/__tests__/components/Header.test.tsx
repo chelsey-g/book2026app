@@ -89,21 +89,21 @@ describe('Header', () => {
 
     it('renders the header with logo and navigation', () => {
       render(<Header />);
-      
+
       expect(screen.getByText('BookTracker')).toBeInTheDocument();
       expect(screen.getByText('Dashboard')).toBeInTheDocument();
       expect(screen.getByText('Discover')).toBeInTheDocument();
-      expect(screen.getByText('My Books')).toBeInTheDocument();
+      expect(screen.getByText('My Shelf')).toBeInTheDocument();
       expect(screen.getByText('Profile')).toBeInTheDocument();
       expect(screen.getByText('Friends')).toBeInTheDocument();
     });
 
     it('highlights active navigation item', () => {
-      mockUsePathname.mockReturnValue('/my-books');
+      mockUsePathname.mockReturnValue('/my-shelf');
       render(<Header />);
-      
-      const myBooksLink = screen.getByText('My Books').closest('a');
-      expect(myBooksLink).toHaveClass('text-[#018283]');
+
+      const myShelfLink = screen.getByText('My Shelf').closest('a');
+      expect(myShelfLink).toHaveClass('text-[#018283]');
     });
 
     it('shows user avatar with first letter of name', () => {
@@ -207,14 +207,14 @@ describe('Header', () => {
     describe('navigation links', () => {
       it('renders navigation links with correct hrefs', () => {
         render(<Header />);
-        
+
         const dashboardLink = screen.getByRole('link', { name: /dashboard/i });
         const discoverLink = screen.getByRole('link', { name: /discover/i });
-        const myBooksLink = screen.getByRole('link', { name: /my books/i });
-        
+        const myShelfLink = screen.getByRole('link', { name: /my shelf/i });
+
         expect(dashboardLink).toHaveAttribute('href', '/dashboard');
         expect(discoverLink).toHaveAttribute('href', '/discover');
-        expect(myBooksLink).toHaveAttribute('href', '/my-books');
+        expect(myShelfLink).toHaveAttribute('href', '/my-shelf');
       });
     });
   });

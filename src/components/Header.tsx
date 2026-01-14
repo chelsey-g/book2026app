@@ -131,8 +131,8 @@ export default function Header() {
         icon: Compass,
       },
       {
-        href: '/my-books',
-        label: 'My Books',
+        href: '/my-shelf',
+        label: 'My Shelf',
         icon: Library,
       },
       {
