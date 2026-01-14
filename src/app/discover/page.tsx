@@ -52,6 +52,7 @@ export default function DiscoverPage() {
   const [searchError, setSearchError] = useState('');
   const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
   const [showSearchHistory, setShowSearchHistory] = useState(false);
+  const [selectedBookForAdd, setSelectedBookForAdd] = useState<Book | null>(null);
   const { user } = useAuth();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -233,7 +234,7 @@ export default function DiscoverPage() {
     }
   };
 
-  const handleAddBook = async (book: Book) => {
+  const handleAddBook = async (book: Book, status: string = 'WANT_TO_READ') => {
     if (!user) return;
 
     try {
@@ -257,7 +258,7 @@ export default function DiscoverPage() {
           coverUrl: book.coverUrl || book.cover_url,
           description: book.description,
           genres: book.genres,
-          status: 'WANT_TO_READ',
+          status: status,
         }),
       });
 
@@ -270,6 +271,7 @@ export default function DiscoverPage() {
 
       const bookId = book.id || book.isbn || `temp_${book.title}_${Date.now()}`;
       setUserBooks(prev => ({ ...prev, [bookId]: data.book.id }));
+      setSelectedBookForAdd(null);
       alert(`"${book.title}" added to your reading list!`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
@@ -572,9 +574,15 @@ export default function DiscoverPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {recommendations.slice(0, 8).map((book, index) => (
-                <div key={index} className="group cursor-pointer">
-                  <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
+              {recommendations.slice(0, 8).map((book, index) => {
+                const bookId = book.id || book.isbn || `temp_${book.title}`;
+                const isFlipped = selectedBookForAdd?.id === bookId || selectedBookForAdd?.isbn === bookId || (selectedBookForAdd && `temp_${selectedBookForAdd.title}` === bookId);
+
+                return (
+                <div key={index} className="group cursor-pointer" style={{ perspective: '1000px' }}>
+                  <div className={`relative transition-all duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`} style={{ transformStyle: 'preserve-3d', transition: 'transform 0.6s' }}>
+                    {/* Front of card */}
+                    <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100" style={{ backfaceVisibility: 'hidden' }}>
                     <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                       {book.coverUrl || book.cover_url ? (
                         <img
@@ -609,8 +617,11 @@ export default function DiscoverPage() {
                       )}
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => handleAddBook(book)}
-                          className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-[#018283] to-[#2CAED8] text-white rounded-2xl hover:from-[#017374] hover:to-[#2BA6C8] transition-all duration-200 shadow-md hover:shadow-lg group/btn"
+                          onClick={() => {
+                            if (!user) return;
+                            setSelectedBookForAdd(book);
+                          }}
+                          className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-[#018283] to-[#2CAED8] text-white rounded-2xl hover:from-[#017374] hover:to-[#2BA6C8] transition-all duration-200 shadow-md hover:shadow-lg group/btn disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={!user}
                         >
                           <Plus className="h-4 w-4 mr-2 group-hover/btn:rotate-90 transition-transform duration-300" />
@@ -626,9 +637,99 @@ export default function DiscoverPage() {
                         </Link>
                       </div>
                     </div>
+                    </div>
+
+                    {/* Back of card */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#018283] to-[#2CAED8] rounded-3xl shadow-lg overflow-hidden" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                      <div className="h-full flex flex-col p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-bold text-white">Choose Shelf</h3>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedBookForAdd(null);
+                            }}
+                            className="text-white hover:bg-white/20 rounded-lg p-1.5 transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+
+                        <div className="flex-1 space-y-2 overflow-y-auto">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'WANT_TO_READ');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                <BookOpen className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Want to Read</div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'CURRENTLY_READING');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mr-3">
+                                <Target className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Currently Reading</div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'READ');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                <Star className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Read</div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'DNF');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center mr-3">
+                                <X className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Did Not Finish</div>
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         )}
@@ -660,9 +761,15 @@ export default function DiscoverPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {trending.slice(0, 8).map((book, index) => (
-                <div key={index} className="group cursor-pointer">
-                  <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
+              {trending.slice(0, 8).map((book, index) => {
+                const bookId = book.id || book.isbn || `temp_${book.title}`;
+                const isFlipped = selectedBookForAdd?.id === bookId || selectedBookForAdd?.isbn === bookId || (selectedBookForAdd && `temp_${selectedBookForAdd.title}` === bookId);
+
+                return (
+                <div key={index} className="group cursor-pointer" style={{ perspective: '1000px' }}>
+                  <div className={`relative transition-all duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`} style={{ transformStyle: 'preserve-3d', transition: 'transform 0.6s' }}>
+                    {/* Front of card */}
+                    <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100" style={{ backfaceVisibility: 'hidden' }}>
                     <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                       {book.coverUrl || book.cover_url ? (
                         <img
@@ -691,8 +798,11 @@ export default function DiscoverPage() {
                       <p className="text-gray-600 text-sm mb-3 line-clamp-1">{book.author}</p>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => handleAddBook(book)}
-                          className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-[#018283] to-[#2CAED8] text-white rounded-2xl hover:from-[#017374] hover:to-[#2BA6C8] transition-all duration-200 shadow-md hover:shadow-lg group/btn"
+                          onClick={() => {
+                            if (!user) return;
+                            setSelectedBookForAdd(book);
+                          }}
+                          className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-[#018283] to-[#2CAED8] text-white rounded-2xl hover:from-[#017374] hover:to-[#2BA6C8] transition-all duration-200 shadow-md hover:shadow-lg group/btn disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={!user}
                         >
                           <Plus className="h-4 w-4 mr-2 group-hover/btn:rotate-90 transition-transform duration-300" />
@@ -708,9 +818,99 @@ export default function DiscoverPage() {
                         </Link>
                       </div>
                     </div>
+                    </div>
+
+                    {/* Back of card */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#018283] to-[#2CAED8] rounded-3xl shadow-lg overflow-hidden" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                      <div className="h-full flex flex-col p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-bold text-white">Choose Shelf</h3>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedBookForAdd(null);
+                            }}
+                            className="text-white hover:bg-white/20 rounded-lg p-1.5 transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+
+                        <div className="flex-1 space-y-2 overflow-y-auto">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'WANT_TO_READ');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                <BookOpen className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Want to Read</div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'CURRENTLY_READING');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mr-3">
+                                <Target className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Currently Reading</div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'READ');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                <Star className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Read</div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddBook(book, 'DNF');
+                            }}
+                            className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center mr-3">
+                                <X className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-gray-900 text-sm">Did Not Finish</div>
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         )}
@@ -752,9 +952,15 @@ export default function DiscoverPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {books.map((book, index) => (
-                <div key={index} className="group">
-                  <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 border border-gray-100">
+              {books.map((book, index) => {
+                const bookId = book.isbn || `temp_${book.title}`;
+                const isFlipped = !userBooks[bookId] && (selectedBookForAdd?.isbn === bookId || (selectedBookForAdd && `temp_${selectedBookForAdd.title}` === bookId));
+
+                return (
+                <div key={index} className="group" style={{ perspective: '1000px' }}>
+                  <div className={`relative transition-all duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`} style={{ transformStyle: 'preserve-3d', transition: 'transform 0.6s' }}>
+                    {/* Front of card */}
+                    <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 border border-gray-100" style={{ backfaceVisibility: 'hidden' }}>
                     <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                       {book.coverUrl ? (
                         <img
@@ -811,7 +1017,10 @@ export default function DiscoverPage() {
                           </select>
                         ) : (
                           <button
-                            onClick={() => handleAddBook(book)}
+                            onClick={() => {
+                              if (!user) return;
+                              setSelectedBookForAdd(book);
+                            }}
                             className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-[#018283] to-[#2CAED8] text-white rounded-2xl hover:from-[#017374] hover:to-[#2BA6C8] transition-all duration-200 shadow-md hover:shadow-lg group/btn disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={!user}
                           >
@@ -829,9 +1038,101 @@ export default function DiscoverPage() {
                         </Link>
                       </div>
                     </div>
+                    </div>
+
+                    {/* Back of card */}
+                    {!userBooks[bookId] && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#018283] to-[#2CAED8] rounded-3xl shadow-lg overflow-hidden" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                        <div className="h-full flex flex-col p-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-bold text-white">Choose Shelf</h3>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedBookForAdd(null);
+                              }}
+                              className="text-white hover:bg-white/20 rounded-lg p-1.5 transition-colors"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+
+                          <div className="flex-1 space-y-2 overflow-y-auto">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddBook(book, 'WANT_TO_READ');
+                              }}
+                              className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                            >
+                              <div className="flex items-center">
+                                <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                  <BookOpen className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-gray-900 text-sm">Want to Read</div>
+                                </div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddBook(book, 'CURRENTLY_READING');
+                              }}
+                              className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                            >
+                              <div className="flex items-center">
+                                <div className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mr-3">
+                                  <Target className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-gray-900 text-sm">Currently Reading</div>
+                                </div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddBook(book, 'READ');
+                              }}
+                              className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                            >
+                              <div className="flex items-center">
+                                <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                  <Star className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-gray-900 text-sm">Read</div>
+                                </div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddBook(book, 'DNF');
+                              }}
+                              className="w-full text-left px-4 py-3 bg-white/95 hover:bg-white rounded-xl transition-all duration-200 group"
+                            >
+                              <div className="flex items-center">
+                                <div className="w-8 h-8 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center mr-3">
+                                  <X className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-gray-900 text-sm">Did Not Finish</div>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         )}
