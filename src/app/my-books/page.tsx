@@ -37,7 +37,7 @@ export default function MyBooksPage() {
   const [loading, setLoading] = useState(true);
   const [selectedShelf, setSelectedShelf] = useState('WANT_TO_READ');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('date-added');
+  const [sortBy, setSortBy] = useState('date-added-desc');
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [ratingHoverId, setRatingHoverId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,8 +99,10 @@ export default function MyBooksPage() {
     }
 
     filtered.sort((a, b) => {
-      if (sortBy === 'date-added') {
+      if (sortBy === 'date-added-desc') {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      } else if (sortBy === 'date-added-asc') {
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       } else if (sortBy === 'title') {
         return (a.books?.title || '').localeCompare(b.books?.title || '');
       } else if (sortBy === 'author') {
@@ -330,7 +332,8 @@ export default function MyBooksPage() {
             onChange={(e) => setSortBy(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#018283] focus:border-transparent text-gray-900 bg-white"
           >
-            <option value="date-added">Recently Added</option>
+            <option value="date-added-desc">Newest First</option>
+            <option value="date-added-asc">Oldest First</option>
             <option value="title">Title A-Z</option>
             <option value="author">Author A-Z</option>
           </select>
