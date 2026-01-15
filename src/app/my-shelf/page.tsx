@@ -35,7 +35,7 @@ export default function MyBooksPage() {
   const [userBooks, setUserBooks] = useState<UserBook[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<UserBook[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedShelf, setSelectedShelf] = useState('WANT_TO_READ');
+  const [selectedShelf, setSelectedShelf] = useState('READ');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date-added-desc');
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
