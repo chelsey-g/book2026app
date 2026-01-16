@@ -4,21 +4,21 @@ import { searchBooks } from '@/lib/data-sources/book-sources';
 
 // Curated search queries with various genres for variety
 const GENRE_QUERIES = [
-  'bestseller fiction',
-  'thriller',
-  'science fiction',
-  'fantasy',
-  'mystery',
-  'romance',
-  'historical fiction',
-  'horror',
-  'contemporary',
-  'literary fiction',
-  'biography',
-  'memoir',
+  'fiction 2024',
+  'thriller 2023',
+  'science fiction 2024',
+  'fantasy 2023',
+  'mystery 2024',
+  'romance 2024',
+  'historical fiction 2023',
+  'horror 2024',
+  'contemporary fiction 2024',
+  'literary fiction 2023',
+  'biography 2024',
+  'memoir 2023',
 ];
 
-// Randomly select genres for variety
+// Randomly select genres for variety, adding current years
 function getRandomGenreQueries(count: number): string[] {
   const shuffled = [...GENRE_QUERIES].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
@@ -101,17 +101,21 @@ export async function GET(request: NextRequest) {
 
 async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
   const allBooks: any[] = [];
+  const currentYear = new Date().getFullYear();
+  const fiveYearsAgo = currentYear - 5;
 
   // If specific genre requested, prioritize it
   if (genre) {
-    const genreBooks = await searchBooks(`popular ${genre}`, Math.ceil(limit / 2));
+    // Fetch more to account for filtering
+    const genreBooks = await searchBooks(`${genre}`, Math.ceil(limit));
     allBooks.push(...genreBooks);
   }
 
   // Fetch from multiple random genre queries to get variety
   const queryCount = genre ? 2 : 3;
   const queriesToUse = getRandomGenreQueries(queryCount);
-  const booksPerQuery = Math.ceil((limit - allBooks.length) / queriesToUse.length);
+  // Fetch more books per query to account for date filtering
+  const booksPerQuery = Math.ceil(limit / queriesToUse.length) + 5;
 
   for (const query of queriesToUse) {
     try {
@@ -122,10 +126,21 @@ async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
     }
   }
 
+  // Filter for books published in the last 5 years
+  const recentBooks = allBooks.filter((book) => {
+    if (!book.publishedDate) return false;
+
+    // Handle various date formats (year only, full date, etc.)
+    const yearMatch = String(book.publishedDate).match(/\d{4}/);
+    if (!yearMatch) return false;
+
+    const publishYear = parseInt(yearMatch[0]);
+    return publishYear >= fiveYearsAgo && publishYear <= currentYear;
+  });
+
   // Remove duplicates based on ISBN (for books that have ISBNs)
-  // Keep books without ISBNs as they can't be deduplicated
   const seenISBNs = new Set<string>();
-  const uniqueBooks = allBooks.filter((book) => {
+  const uniqueBooks = recentBooks.filter((book) => {
     if (!book.isbn) {
       // Keep books without ISBNs
       return true;
