@@ -44,6 +44,7 @@ export default function DiscoverPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [recommendations, setRecommendations] = useState<Book[]>([]);
   const [trending, setTrending] = useState<Book[]>([]);
+  const [trendingGenres, setTrendingGenres] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [inputValue, setInputValue] = useState(query);
@@ -202,6 +203,7 @@ export default function DiscoverPage() {
       const response = await fetch(`/api/books/popular?limit=12&timeframe=${timeframe}`);
       const data = await response.json();
       setTrending(data.books || []);
+      setTrendingGenres(data.genres || []);
     } catch (error) {
       console.error('Trending books error:', error);
     }
@@ -740,7 +742,14 @@ export default function DiscoverPage() {
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
                 <Flame className="h-8 w-8 text-orange-500" />
-                <h2 className="text-3xl font-bold text-gray-900">Trending Now</h2>
+                <h2 className="text-3xl font-bold text-gray-900">
+                  Trending Now
+                  {trendingGenres.length > 0 && (
+                    <span className="text-2xl font-normal text-gray-600">
+                      {' '}- {trendingGenres.map(g => g.charAt(0).toUpperCase() + g.slice(1)).join(', ')}
+                    </span>
+                  )}
+                </h2>
               </div>
 
               <div className="flex gap-2">
