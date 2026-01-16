@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { searchBooks } from '@/lib/data-sources/book-sources';
 
-// Curated search queries with various genres for variety
+// Curated search queries with various genres for variety (focus on current year)
 const GENRE_QUERIES = [
-  'fiction 2024',
-  'thriller 2023',
-  'science fiction 2024',
-  'fantasy 2023',
-  'mystery 2024',
-  'romance 2024',
-  'historical fiction 2023',
-  'horror 2024',
-  'contemporary fiction 2024',
-  'literary fiction 2023',
-  'biography 2024',
-  'memoir 2023',
+  'fiction 2025',
+  'thriller 2025',
+  'science fiction 2025',
+  'fantasy 2025',
+  'mystery 2025',
+  'romance 2025',
+  'historical fiction 2025',
+  'horror 2025',
+  'contemporary fiction 2025',
+  'literary fiction 2025',
+  'biography 2025',
+  'memoir 2025',
 ];
 
 // Randomly select genres for variety, adding current years
@@ -77,18 +77,18 @@ export async function GET(request: NextRequest) {
 
     // If database has trending books, return them
     if (booksWithScores.length > 0) {
-      return NextResponse.json({ books: booksWithScores });
+      return NextResponse.json({ books: booksWithScores, genres: [] });
     }
 
     // Fallback: Use random genre searches for popular books
-    const fallbackBooks = await fetchPopularBooksFallback(limit, genre);
-    return NextResponse.json({ books: fallbackBooks });
+    const { books: fallbackBooks, genres } = await fetchPopularBooksFallback(limit, genre);
+    return NextResponse.json({ books: fallbackBooks, genres });
 
   } catch (error) {
     console.error('Popular books error:', error);
     try {
-      const fallbackBooks = await fetchPopularBooksFallback(limit, genre);
-      return NextResponse.json({ books: fallbackBooks });
+      const { books: fallbackBooks, genres } = await fetchPopularBooksFallback(limit, genre);
+      return NextResponse.json({ books: fallbackBooks, genres });
     } catch (fallbackError) {
       console.error('Fallback error:', fallbackError);
       return NextResponse.json(
@@ -101,8 +101,10 @@ export async function GET(request: NextRequest) {
 
 async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
   const allBooks: any[] = [];
-  const currentYear = new Date().getFullYear();
-  const fiveYearsAgo = currentYear - 5;
+  const now = new Date();
+  const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+  const currentYear = now.getFullYear();
+  const lastYear = oneYearAgo.getFullYear();
 
   // If specific genre requested, prioritize it
   if (genre) {
@@ -117,6 +119,9 @@ async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
   // Fetch more books per query to account for date filtering
   const booksPerQuery = Math.ceil(limit / queriesToUse.length) + 5;
 
+  // Extract genre names from queries (remove year)
+  const selectedGenres = queriesToUse.map(q => q.replace(/\s+\d{4}$/, '').trim());
+
   for (const query of queriesToUse) {
     try {
       const books = await searchBooks(query, booksPerQuery);
@@ -126,7 +131,7 @@ async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
     }
   }
 
-  // Filter for books published in the last 5 years
+  // Filter for books published in the last 365 days (current year or last year)
   const recentBooks = allBooks.filter((book) => {
     if (!book.publishedDate) return false;
 
@@ -135,7 +140,8 @@ async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
     if (!yearMatch) return false;
 
     const publishYear = parseInt(yearMatch[0]);
-    return publishYear >= fiveYearsAgo && publishYear <= currentYear;
+    // Only accept books from current year or last year (approximately last 365 days)
+    return publishYear === currentYear || publishYear === lastYear;
   });
 
   // Remove duplicates based on ISBN (for books that have ISBNs)
@@ -153,5 +159,8 @@ async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
     return true;
   });
 
-  return uniqueBooks.slice(0, limit);
+  return {
+    books: uniqueBooks.slice(0, limit),
+    genres: selectedGenres
+  };
 }
