@@ -2,6 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { searchBooks } from '@/lib/data-sources/book-sources';
 
+// Curated search queries with various genres for variety
+const GENRE_QUERIES = [
+  'bestseller fiction',
+  'thriller',
+  'science fiction',
+  'fantasy',
+  'mystery',
+  'romance',
+  'historical fiction',
+  'horror',
+  'contemporary',
+  'literary fiction',
+  'biography',
+  'memoir',
+];
+
+// Randomly select genres for variety
+function getRandomGenreQueries(count: number): string[] {
+  const shuffled = [...GENRE_QUERIES].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const limit = parseInt(searchParams.get('limit') || '20');
@@ -16,7 +38,7 @@ export async function GET(request: NextRequest) {
   try {
     let dateFilter = '';
     const now = new Date();
-    
+
     if (timeframe === 'week') {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
       dateFilter = `and created_at > '${weekAgo}'`;
@@ -42,7 +64,7 @@ export async function GET(request: NextRequest) {
       const reviewCount = book.reviews?.[0]?.count || 0;
       const userCount = book.user_books?.[0]?.count || 0;
       const viewCount = book.view_count || 0;
-      
+
       const trendingScore = (viewCount * 0.3) + (reviewCount * 0.4) + (userCount * 0.3);
 
       return {
@@ -53,16 +75,19 @@ export async function GET(request: NextRequest) {
       };
     }).sort((a: any, b: any) => b.trendingScore - a.trendingScore);
 
-    return NextResponse.json({ books: booksWithScores });
+    // If database has trending books, return them
+    if (booksWithScores.length > 0) {
+      return NextResponse.json({ books: booksWithScores });
+    }
+
+    // Fallback: Use random genre searches for popular books
+    const fallbackBooks = await fetchPopularBooksFallback(limit, genre);
+    return NextResponse.json({ books: fallbackBooks });
+
   } catch (error) {
     console.error('Popular books error:', error);
     try {
-      let query = 'popular';
-      if (genre) {
-        query += ` ${genre}`;
-      }
-      
-      const fallbackBooks = await searchBooks(query, limit);
+      const fallbackBooks = await fetchPopularBooksFallback(limit, genre);
       return NextResponse.json({ books: fallbackBooks });
     } catch (fallbackError) {
       console.error('Fallback error:', fallbackError);
@@ -72,4 +97,46 @@ export async function GET(request: NextRequest) {
       );
     }
   }
+}
+
+async function fetchPopularBooksFallback(limit: number, genre?: string | null) {
+  const allBooks: any[] = [];
+
+  // If specific genre requested, prioritize it
+  if (genre) {
+    const genreBooks = await searchBooks(`popular ${genre}`, Math.ceil(limit / 2));
+    allBooks.push(...genreBooks);
+  }
+
+  // Fetch from multiple random genre queries to get variety
+  const queryCount = genre ? 2 : 3;
+  const queriesToUse = getRandomGenreQueries(queryCount);
+  const booksPerQuery = Math.ceil((limit - allBooks.length) / queriesToUse.length);
+
+  for (const query of queriesToUse) {
+    try {
+      const books = await searchBooks(query, booksPerQuery);
+      allBooks.push(...books);
+    } catch (error) {
+      console.error(`Error fetching books for query "${query}":`, error);
+    }
+  }
+
+  // Remove duplicates based on ISBN (for books that have ISBNs)
+  // Keep books without ISBNs as they can't be deduplicated
+  const seenISBNs = new Set<string>();
+  const uniqueBooks = allBooks.filter((book) => {
+    if (!book.isbn) {
+      // Keep books without ISBNs
+      return true;
+    }
+    if (seenISBNs.has(book.isbn)) {
+      // Skip duplicate ISBNs
+      return false;
+    }
+    seenISBNs.add(book.isbn);
+    return true;
+  });
+
+  return uniqueBooks.slice(0, limit);
 }
