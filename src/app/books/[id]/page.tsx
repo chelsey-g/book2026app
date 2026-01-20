@@ -83,23 +83,88 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
 
    const fetchBookDetails = async () => {
      try {
-       const response = await fetch(`/api/books/${bookId}`);
-       const data = await response.json();
-       
-       if (!response.ok) {
-         throw new Error(data.error || 'Failed to fetch book details');
+       if (!bookId) return;
+
+       // Clean up the book ID
+       let searchQuery = bookId;
+       if (searchQuery.startsWith('temp_')) {
+         searchQuery = searchQuery.substring(5);
        }
 
-       setBook(data.book);
+       // Search for the book - this will find it whether it's in DB or not
+       const searchResponse = await fetch(`/api/books/search?q=${encodeURIComponent(searchQuery)}&limit=20`);
+       const searchData = await searchResponse.json();
 
-       // Check if user has this book in their list
-       if (user) {
-         const userBooksResponse = await fetch('/api/users/books');
-         const userBooksData = await userBooksResponse.json();
-         
-          const existingBook = userBooksData.books.find((b: any) => b.books?.isbn === bookId || b.book_id === bookId);
-         if (existingBook) {
-           setUserBookStatus(existingBook.status);
+       if (searchData.books && searchData.books.length > 0) {
+         // Parse search query to extract title and author if it's a combined query
+         let searchTitle = searchQuery;
+         let searchAuthor = '';
+
+         // If search query contains both title and author (space-separated)
+         const lastSpaceIndex = searchQuery.lastIndexOf(' ');
+         if (lastSpaceIndex > 0 && !searchQuery.match(/^\d+$/)) {
+           // Split into potential title and author
+           const parts = searchQuery.split(' ');
+           // Last 2 words are likely the author's first and last name
+           if (parts.length >= 3) {
+             searchAuthor = parts.slice(-2).join(' ').toLowerCase();
+             searchTitle = parts.slice(0, -2).join(' ').toLowerCase();
+           }
+         }
+
+         // Find the best match by ISBN, exact title match, or title+author match
+         let matchedBook = searchData.books.find((b: any) =>
+           b.isbn === searchQuery || b.id === searchQuery
+         );
+
+         if (!matchedBook && searchAuthor) {
+           // Try to match by both title and author
+           matchedBook = searchData.books.find((b: any) =>
+             b.title.toLowerCase().includes(searchTitle) &&
+             b.author.toLowerCase().includes(searchAuthor)
+           );
+         }
+
+         if (!matchedBook) {
+           // Fall back to exact title match
+           matchedBook = searchData.books.find((b: any) =>
+             b.title.toLowerCase() === searchQuery.toLowerCase()
+           );
+         }
+
+         if (!matchedBook) {
+           // Last resort: partial title match
+           matchedBook = searchData.books.find((b: any) =>
+             b.title.toLowerCase().includes(searchQuery.toLowerCase())
+           );
+         }
+
+         // If still no match, just use first result
+         if (!matchedBook) {
+           matchedBook = searchData.books[0];
+         }
+
+         setBook(matchedBook);
+
+         // Check if user has this book in their list
+         if (user) {
+           const { data: { session } } = await import('@/lib/supabase/client').then(m => m.supabase.auth.getSession());
+           if (session?.access_token) {
+             const userBooksResponse = await fetch('/api/users/books', {
+               headers: { 'Authorization': `Bearer ${session.access_token}` }
+             });
+             const userBooksData = await userBooksResponse.json();
+
+             const existingBook = userBooksData.books?.find((b: any) =>
+               b.books?.isbn === matchedBook.isbn ||
+               b.books?.id === matchedBook.id ||
+               b.book_id === matchedBook.id
+             );
+
+             if (existingBook) {
+               setUserBookStatus(existingBook.status);
+             }
+           }
          }
        }
      } catch (error) {

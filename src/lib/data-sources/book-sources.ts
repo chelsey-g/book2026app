@@ -21,6 +21,9 @@ export async function searchBooksOpenLibrary(query: string, limit = 20) {
 export async function searchBooksGoogleAI(query: string, limit = 20) {
   try {
     const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=${limit}`);
+    if (!response.data.items || !Array.isArray(response.data.items)) {
+      return [];
+    }
     return response.data.items.map((book: any) => ({
       title: book.volumeInfo.title,
       author: book.volumeInfo.authors?.[0] || 'Unknown Author',
@@ -37,11 +40,13 @@ export async function searchBooksGoogleAI(query: string, limit = 20) {
 }
 
 export async function searchBooks(query: string, limit = 20) {
-  const openLibraryResults = await searchBooksOpenLibrary(query, limit);
-  
-  if (openLibraryResults.length > 0) {
-    return openLibraryResults;
+  // Try Google Books first since it has better metadata (descriptions, page counts, etc.)
+  const googleResults = await searchBooksGoogleAI(query, limit);
+
+  if (googleResults.length > 0) {
+    return googleResults;
   }
-  
-  return searchBooksGoogleAI(query, limit);
+
+  // Fallback to Open Library if Google Books returns nothing
+  return searchBooksOpenLibrary(query, limit);
 }
