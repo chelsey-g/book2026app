@@ -37,8 +37,11 @@ export default function SearchPage() {
    const [showFilters, setShowFilters] = useState(false);
    const [inputValue, setInputValue] = useState(query);
    const [userBooks, setUserBooks] = useState<{ [key: string]: string }>({});
+   const [ratingPopupBook, setRatingPopupBook] = useState<Book | null>(null);
+   const [hoverRating, setHoverRating] = useState(0);
    const { user } = useAuth();
    const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+   const ratingPopupRef = useRef<HTMLDivElement>(null);
 
   const genres = [
     'Fiction', 'Non-Fiction', 'Mystery', 'Thriller', 'Romance', 'Science Fiction',
@@ -239,6 +242,74 @@ export default function SearchPage() {
        alert(`Failed to update book: ${message}`);
      }
    };
+
+   const handleRateBook = async (book: Book, rating: number) => {
+     if (!user) {
+       alert('Please sign in to rate books');
+       return;
+     }
+
+     try {
+       const { data: { session } } = await supabase.auth.getSession();
+
+       if (!session?.access_token) {
+         throw new Error('No authentication token available');
+       }
+
+       const bookId = book.isbn || `${book.title}_${book.author}`;
+
+       const response = await fetch('/api/users/books', {
+         method: 'POST',
+         headers: {
+           'Content-Type': 'application/json',
+           'Authorization': `Bearer ${session.access_token}`,
+         },
+         body: JSON.stringify({
+           bookId,
+           title: book.title,
+           author: book.author,
+           isbn: book.isbn,
+           coverUrl: book.coverUrl,
+           description: book.description,
+           genres: book.genres,
+           status: 'READ',
+           rating,
+         }),
+       });
+
+       const data = await response.json();
+
+       if (!response.ok) {
+         throw new Error(data.error || 'Failed to rate book');
+       }
+
+       setUserBooks(prev => ({ ...prev, [bookId]: data.book.id }));
+       setRatingPopupBook(null);
+       setHoverRating(0);
+     } catch (error) {
+       const message = error instanceof Error ? error.message : 'Unknown error';
+       console.error('Rate book error:', message);
+       alert(`Failed to rate book: ${message}`);
+     }
+   };
+
+   // Close rating popup when clicking outside
+   useEffect(() => {
+     const handleClickOutside = (event: MouseEvent) => {
+       if (ratingPopupRef.current && !ratingPopupRef.current.contains(event.target as Node)) {
+         setRatingPopupBook(null);
+         setHoverRating(0);
+       }
+     };
+
+     if (ratingPopupBook) {
+       document.addEventListener('mousedown', handleClickOutside);
+     }
+
+     return () => {
+       document.removeEventListener('mousedown', handleClickOutside);
+     };
+   }, [ratingPopupBook]);
 
   const getFilterBadgeText = () => {
     const activeFilters = [genre, sortBy, yearRange].filter(Boolean).length;
@@ -484,12 +555,42 @@ export default function SearchPage() {
                             {user ? 'Add to List' : 'Sign in'}
                           </span>
                         </button>
-                        <Link
-                          href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}
-                          className="p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-gray-200 hover:text-[#018283] transition-all duration-200"
-                        >
-                          <Star className="h-4 w-4" />
-                        </Link>
+                        <div className="relative">
+                          <button
+                            onClick={() => setRatingPopupBook(ratingPopupBook?.title === book.title ? null : book)}
+                            className="p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-gray-200 hover:text-[#018283] transition-all duration-200"
+                            title="Rate this book"
+                          >
+                            <Star className="h-4 w-4" />
+                          </button>
+                          {ratingPopupBook?.title === book.title && ratingPopupBook?.author === book.author && (
+                            <div
+                              ref={ratingPopupRef}
+                              className="absolute bottom-full right-0 mb-2 p-3 bg-white rounded-2xl shadow-xl border border-gray-200 z-50"
+                            >
+                              <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">Rate this book</p>
+                              <div className="flex space-x-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <button
+                                    key={star}
+                                    onClick={() => handleRateBook(book, star)}
+                                    onMouseEnter={() => setHoverRating(star)}
+                                    onMouseLeave={() => setHoverRating(0)}
+                                    className="p-1 transition-transform hover:scale-110"
+                                  >
+                                    <Star
+                                      className={`h-6 w-6 transition-colors ${
+                                        star <= hoverRating
+                                          ? 'text-yellow-400 fill-yellow-400'
+                                          : 'text-gray-300'
+                                      }`}
+                                    />
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -604,12 +705,42 @@ export default function SearchPage() {
                              </span>
                            </button>
                          )}
-                         <Link
-                           href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}
-                           className="p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-[#018283] hover:text-white transition-all duration-200"
-                         >
-                           <Star className="h-4 w-4" />
-                         </Link>
+                         <div className="relative">
+                           <button
+                             onClick={() => setRatingPopupBook(ratingPopupBook?.title === book.title ? null : book)}
+                             className="p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-[#018283] hover:text-white transition-all duration-200"
+                             title="Rate this book"
+                           >
+                             <Star className="h-4 w-4" />
+                           </button>
+                           {ratingPopupBook?.title === book.title && ratingPopupBook?.author === book.author && (
+                             <div
+                               ref={ratingPopupRef}
+                               className="absolute bottom-full right-0 mb-2 p-3 bg-white rounded-2xl shadow-xl border border-gray-200 z-50"
+                             >
+                               <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">Rate this book</p>
+                               <div className="flex space-x-1">
+                                 {[1, 2, 3, 4, 5].map((star) => (
+                                   <button
+                                     key={star}
+                                     onClick={() => handleRateBook(book, star)}
+                                     onMouseEnter={() => setHoverRating(star)}
+                                     onMouseLeave={() => setHoverRating(0)}
+                                     className="p-1 transition-transform hover:scale-110"
+                                   >
+                                     <Star
+                                       className={`h-6 w-6 transition-colors ${
+                                         star <= hoverRating
+                                           ? 'text-yellow-400 fill-yellow-400'
+                                           : 'text-gray-300'
+                                       }`}
+                                     />
+                                   </button>
+                                 ))}
+                               </div>
+                             </div>
+                           )}
+                         </div>
                        </div>
                     </div>
                   </div>
