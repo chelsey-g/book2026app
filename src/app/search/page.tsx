@@ -171,7 +171,7 @@ export default function SearchPage() {
            'Authorization': `Bearer ${session.access_token}`,
          },
          body: JSON.stringify({
-           bookId: book.isbn || `temp_${book.title}_${Date.now()}`,
+           bookId: book.isbn || `${book.title}_${book.author}`,
            title: book.title,
            author: book.author,
            isbn: book.isbn,
@@ -189,7 +189,7 @@ export default function SearchPage() {
          throw new Error(errorMsg || 'Failed to add book');
        }
 
-       const bookId = book.isbn || `temp_${book.title}_${Date.now()}`;
+       const bookId = book.isbn || `${book.title}_${book.author}`;
        setUserBooks(prev => ({ ...prev, [bookId]: data.book.id }));
        alert(`"${book.title}" added to your reading list!`);
      } catch (error) {
@@ -209,7 +209,7 @@ export default function SearchPage() {
          throw new Error('No authentication token available');
        }
 
-       const bookId = book.isbn || `temp_${book.title}_${Date.now()}`;
+       const bookId = book.isbn || `${book.title}_${book.author}`;
        const userBookId = userBooks[bookId];
 
        if (!userBookId) {
@@ -485,7 +485,7 @@ export default function SearchPage() {
                           </span>
                         </button>
                         <Link
-                          href={`/books/${book.isbn || `temp_${book.title}`}`}
+                          href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}
                           className="p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-gray-200 hover:text-[#018283] transition-all duration-200"
                         >
                           <Star className="h-4 w-4" />
@@ -575,7 +575,7 @@ export default function SearchPage() {
                       )}
                       
                        <div className="flex items-center space-x-2">
-                         {userBooks[book.isbn || `temp_${book.title}_${Date.now()}`] ? (
+                         {userBooks[book.isbn || `${book.title}_${book.author}`] ? (
                            <select
                              value=""
                              onChange={(e) => {
@@ -605,7 +605,7 @@ export default function SearchPage() {
                            </button>
                          )}
                          <Link
-                           href={`/books/${book.isbn || `temp_${book.title}`}`}
+                           href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}
                            className="p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-[#018283] hover:text-white transition-all duration-200"
                          >
                            <Star className="h-4 w-4" />
