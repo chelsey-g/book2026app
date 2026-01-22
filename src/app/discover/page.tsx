@@ -604,9 +604,11 @@ export default function DiscoverPage() {
                     </div>
 
                     <div className="p-6">
-                      <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200">
-                        {book.title}
-                      </h3>
+                      <Link href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}>
+                        <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200 cursor-pointer hover:underline">
+                          {book.title}
+                        </h3>
+                      </Link>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-1">{book.author}</p>
                       {book.genres && (
                         <div className="flex flex-wrap gap-1 mb-4">
@@ -801,9 +803,11 @@ export default function DiscoverPage() {
                     </div>
 
                     <div className="p-6">
-                      <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200">
-                        {book.title}
-                      </h3>
+                      <Link href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}>
+                        <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200 cursor-pointer hover:underline">
+                          {book.title}
+                        </h3>
+                      </Link>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-1">{book.author}</p>
                       <div className="flex items-center space-x-2">
                         <button
@@ -989,9 +993,11 @@ export default function DiscoverPage() {
                     </div>
 
                     <div className="p-6">
-                      <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200">
-                        {book.title}
-                      </h3>
+                      <Link href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}>
+                        <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200 cursor-pointer hover:underline">
+                          {book.title}
+                        </h3>
+                      </Link>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-1">{book.author}</p>
 
                       {book.pageCount && (

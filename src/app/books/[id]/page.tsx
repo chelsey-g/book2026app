@@ -83,23 +83,93 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
 
    const fetchBookDetails = async () => {
      try {
-       const response = await fetch(`/api/books/${bookId}`);
-       const data = await response.json();
-       
-       if (!response.ok) {
-         throw new Error(data.error || 'Failed to fetch book details');
+       if (!bookId) return;
+
+       // Clean up the book ID
+       let searchQuery = bookId;
+       if (searchQuery.startsWith('temp_')) {
+         searchQuery = searchQuery.substring(5);
        }
 
-       setBook(data.book);
+       // Search for the book - this will find it whether it's in DB or not
+       const searchResponse = await fetch(`/api/books/search?q=${encodeURIComponent(searchQuery)}&limit=20`);
+       const searchData = await searchResponse.json();
 
-       // Check if user has this book in their list
-       if (user) {
-         const userBooksResponse = await fetch('/api/users/books');
-         const userBooksData = await userBooksResponse.json();
-         
-          const existingBook = userBooksData.books.find((b: any) => b.books?.isbn === bookId || b.book_id === bookId);
-         if (existingBook) {
-           setUserBookStatus(existingBook.status);
+       if (searchData.books && searchData.books.length > 0) {
+         // Parse search query to extract title and author
+         let searchTitle = '';
+         let searchAuthor = '';
+
+         // Check if it's an ISBN (all digits)
+         if (searchQuery.match(/^\d+$/)) {
+           // It's an ISBN, find by ISBN
+           const matchedBook = searchData.books.find((b: any) => b.isbn === searchQuery);
+           if (matchedBook) {
+             setBook(matchedBook);
+             return;
+           }
+         }
+
+         // Split query into title and author (last 2 words are author)
+         const parts = searchQuery.split(' ');
+         if (parts.length >= 3) {
+           searchAuthor = parts.slice(-2).join(' ').toLowerCase();
+           searchTitle = parts.slice(0, -2).join(' ').toLowerCase();
+         } else {
+           searchTitle = searchQuery.toLowerCase();
+         }
+
+         console.log('Searching for:', { searchTitle, searchAuthor });
+
+         // Find the book that matches BOTH title AND author
+         let matchedBook = null;
+
+         if (searchAuthor) {
+           // Match books where title contains the search title AND author matches
+           matchedBook = searchData.books.find((b: any) => {
+             const titleMatch = b.title.toLowerCase() === searchTitle ||
+                               b.title.toLowerCase().includes(searchTitle);
+             const authorMatch = b.author.toLowerCase().includes(searchAuthor);
+             console.log(`Checking "${b.title}" by ${b.author}:`, { titleMatch, authorMatch });
+             return titleMatch && authorMatch;
+           });
+         }
+
+         if (!matchedBook) {
+           // Fallback: just match by title
+           matchedBook = searchData.books.find((b: any) =>
+             b.title.toLowerCase() === searchTitle ||
+             b.title.toLowerCase().includes(searchTitle)
+           );
+         }
+
+         // Last resort: use first result
+         if (!matchedBook) {
+           matchedBook = searchData.books[0];
+         }
+
+         console.log('Selected book:', matchedBook?.title, 'by', matchedBook?.author);
+         setBook(matchedBook);
+
+         // Check if user has this book in their list
+         if (user) {
+           const { data: { session } } = await import('@/lib/supabase/client').then(m => m.supabase.auth.getSession());
+           if (session?.access_token) {
+             const userBooksResponse = await fetch('/api/users/books', {
+               headers: { 'Authorization': `Bearer ${session.access_token}` }
+             });
+             const userBooksData = await userBooksResponse.json();
+
+             const existingBook = userBooksData.books?.find((b: any) =>
+               b.books?.isbn === matchedBook.isbn ||
+               b.books?.id === matchedBook.id ||
+               b.book_id === matchedBook.id
+             );
+
+             if (existingBook) {
+               setUserBookStatus(existingBook.status);
+             }
+           }
          }
        }
      } catch (error) {
@@ -294,15 +364,18 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
               </p>
             )}
 
-            {book.pageCount && (
+            {book.pageCount && book.pageCount > 0 && (
               <p className="text-sm text-gray-500 mb-4">
                 {book.pageCount} pages
               </p>
             )}
 
             {book.description && (
-              <div className="prose max-w-none mb-8">
-                <p>{book.description}</p>
+              <div className="mb-8 mt-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">About this book</h2>
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 leading-relaxed">{book.description}</p>
+                </div>
               </div>
             )}
 
