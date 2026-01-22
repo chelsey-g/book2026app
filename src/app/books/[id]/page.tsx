@@ -96,54 +96,59 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
        const searchData = await searchResponse.json();
 
        if (searchData.books && searchData.books.length > 0) {
-         // Parse search query to extract title and author if it's a combined query
-         let searchTitle = searchQuery;
+         // Parse search query to extract title and author
+         let searchTitle = '';
          let searchAuthor = '';
 
-         // If search query contains both title and author (space-separated)
-         const lastSpaceIndex = searchQuery.lastIndexOf(' ');
-         if (lastSpaceIndex > 0 && !searchQuery.match(/^\d+$/)) {
-           // Split into potential title and author
-           const parts = searchQuery.split(' ');
-           // Last 2 words are likely the author's first and last name
-           if (parts.length >= 3) {
-             searchAuthor = parts.slice(-2).join(' ').toLowerCase();
-             searchTitle = parts.slice(0, -2).join(' ').toLowerCase();
+         // Check if it's an ISBN (all digits)
+         if (searchQuery.match(/^\d+$/)) {
+           // It's an ISBN, find by ISBN
+           const matchedBook = searchData.books.find((b: any) => b.isbn === searchQuery);
+           if (matchedBook) {
+             setBook(matchedBook);
+             return;
            }
          }
 
-         // Find the best match by ISBN, exact title match, or title+author match
-         let matchedBook = searchData.books.find((b: any) =>
-           b.isbn === searchQuery || b.id === searchQuery
-         );
+         // Split query into title and author (last 2 words are author)
+         const parts = searchQuery.split(' ');
+         if (parts.length >= 3) {
+           searchAuthor = parts.slice(-2).join(' ').toLowerCase();
+           searchTitle = parts.slice(0, -2).join(' ').toLowerCase();
+         } else {
+           searchTitle = searchQuery.toLowerCase();
+         }
 
-         if (!matchedBook && searchAuthor) {
-           // Try to match by both title and author
-           matchedBook = searchData.books.find((b: any) =>
-             b.title.toLowerCase().includes(searchTitle) &&
-             b.author.toLowerCase().includes(searchAuthor)
-           );
+         console.log('Searching for:', { searchTitle, searchAuthor });
+
+         // Find the book that matches BOTH title AND author
+         let matchedBook = null;
+
+         if (searchAuthor) {
+           // Match books where title contains the search title AND author matches
+           matchedBook = searchData.books.find((b: any) => {
+             const titleMatch = b.title.toLowerCase() === searchTitle ||
+                               b.title.toLowerCase().includes(searchTitle);
+             const authorMatch = b.author.toLowerCase().includes(searchAuthor);
+             console.log(`Checking "${b.title}" by ${b.author}:`, { titleMatch, authorMatch });
+             return titleMatch && authorMatch;
+           });
          }
 
          if (!matchedBook) {
-           // Fall back to exact title match
+           // Fallback: just match by title
            matchedBook = searchData.books.find((b: any) =>
-             b.title.toLowerCase() === searchQuery.toLowerCase()
+             b.title.toLowerCase() === searchTitle ||
+             b.title.toLowerCase().includes(searchTitle)
            );
          }
 
-         if (!matchedBook) {
-           // Last resort: partial title match
-           matchedBook = searchData.books.find((b: any) =>
-             b.title.toLowerCase().includes(searchQuery.toLowerCase())
-           );
-         }
-
-         // If still no match, just use first result
+         // Last resort: use first result
          if (!matchedBook) {
            matchedBook = searchData.books[0];
          }
 
+         console.log('Selected book:', matchedBook?.title, 'by', matchedBook?.author);
          setBook(matchedBook);
 
          // Check if user has this book in their list
@@ -359,15 +364,18 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
               </p>
             )}
 
-            {book.pageCount && (
+            {book.pageCount && book.pageCount > 0 && (
               <p className="text-sm text-gray-500 mb-4">
                 {book.pageCount} pages
               </p>
             )}
 
             {book.description && (
-              <div className="prose max-w-none mb-8">
-                <p>{book.description}</p>
+              <div className="mb-8 mt-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">About this book</h2>
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 leading-relaxed">{book.description}</p>
+                </div>
               </div>
             )}
 

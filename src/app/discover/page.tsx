@@ -508,7 +508,7 @@ export default function DiscoverPage() {
                     </div>
 
                     <div className="p-6">
-                      <Link href={`/books/${book.isbn || encodeURIComponent(`${book.title} ${book.author}`)}`}>
+                      <Link href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}>
                         <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200 cursor-pointer hover:underline">
                           {book.title}
                         </h3>
@@ -601,7 +601,7 @@ export default function DiscoverPage() {
                     </div>
 
                     <div className="p-6">
-                      <Link href={`/books/${book.isbn || encodeURIComponent(`${book.title} ${book.author}`)}`}>
+                      <Link href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}>
                         <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200 cursor-pointer hover:underline">
                           {book.title}
                         </h3>
@@ -692,7 +692,7 @@ export default function DiscoverPage() {
                     </div>
 
                     <div className="p-6">
-                      <Link href={`/books/${book.isbn || encodeURIComponent(`${book.title} ${book.author}`)}`}>
+                      <Link href={`/books/${encodeURIComponent(`${book.title} ${book.author}`)}`}>
                         <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2 group-hover:text-[#018283] transition-colors duration-200 cursor-pointer hover:underline">
                           {book.title}
                         </h3>
