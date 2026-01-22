@@ -222,45 +222,7 @@ describe('Book Search Utilities', () => {
   });
 
   describe('searchBooks', () => {
-    it('prefers Open Library results when available', async () => {
-      const openLibraryResponse = {
-        data: {
-          docs: [
-            {
-              title: 'Open Library Book',
-              author_name: ['Open Author'],
-            },
-          ],
-        },
-      };
-
-      mockedAxiosGet.mockResolvedValueOnce(openLibraryResponse);
-
-      const result = await searchBooks('test query');
-
-      expect(result).toEqual([
-        {
-          title: 'Open Library Book',
-          author: 'Open Author',
-          isbn: undefined,
-          coverUrl: null,
-          publishedDate: undefined,
-          pageCount: undefined,
-          description: null,
-        },
-      ]);
-
-      // Should not call Google Books API
-      expect(mockedAxiosGet).toHaveBeenCalledTimes(1);
-    });
-
-    it('falls back to Google Books when Open Library returns no results', async () => {
-      const openLibraryResponse = {
-        data: {
-          docs: [], // No results
-        },
-      };
-
+    it('prefers Google Books results when available', async () => {
       const googleResponse = {
         data: {
           items: [
@@ -274,9 +236,7 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxiosGet
-        .mockResolvedValueOnce(openLibraryResponse)
-        .mockResolvedValueOnce(googleResponse);
+      mockedAxiosGet.mockResolvedValueOnce(googleResponse);
 
       const result = await searchBooks('test query');
 
@@ -289,6 +249,46 @@ describe('Book Search Utilities', () => {
           publishedDate: undefined,
           pageCount: undefined,
           description: undefined,
+        },
+      ]);
+
+      // Should not call Open Library API
+      expect(mockedAxiosGet).toHaveBeenCalledTimes(1);
+    });
+
+    it('falls back to Open Library when Google Books returns no results', async () => {
+      const googleResponse = {
+        data: {
+          items: [], // No results
+        },
+      };
+
+      const openLibraryResponse = {
+        data: {
+          docs: [
+            {
+              title: 'Open Library Book',
+              author_name: ['Open Author'],
+            },
+          ],
+        },
+      };
+
+      mockedAxiosGet
+        .mockResolvedValueOnce(googleResponse)
+        .mockResolvedValueOnce(openLibraryResponse);
+
+      const result = await searchBooks('test query');
+
+      expect(result).toEqual([
+        {
+          title: 'Open Library Book',
+          author: 'Open Author',
+          isbn: undefined,
+          coverUrl: null,
+          publishedDate: undefined,
+          pageCount: undefined,
+          description: null,
         },
       ]);
 
