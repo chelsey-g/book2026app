@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { bookId, status, currentPage, title, author, isbn, coverUrl, description, genres } = body;
+    const { bookId, status, currentPage, title, author, isbn, coverUrl, description, genres, rating } = body;
 
     if (!bookId || !status) {
       return NextResponse.json(
@@ -131,6 +131,7 @@ export async function POST(request: NextRequest) {
           current_page: currentPage || null,
           started_at: status === 'CURRENTLY_READING' ? new Date().toISOString() : null,
           completed_at: status === 'READ' ? new Date().toISOString() : null,
+          rating: rating || null,
         },
         { onConflict: 'user_id,book_id' }
       )
