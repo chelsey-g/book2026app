@@ -330,18 +330,17 @@ export default function Dashboard() {
               <p className="text-sm text-gray-500">All time</p>
             </div>
 
-            {/* Currently Reading */}
+            {/* Reading Streak */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-gray-600 text-sm font-medium uppercase tracking-wide">Reading Now</h3>
-                <div className="p-2 bg-cyan-50 rounded-lg">
-                  <Clock className="h-5 w-5 text-cyan-600" />
+                <h3 className="text-gray-600 text-sm font-medium uppercase tracking-wide">Reading Streak</h3>
+                <div className="p-2 bg-orange-50 rounded-lg">
+                  <Flame className="h-5 w-5 text-orange-500" />
                 </div>
               </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.currentlyReading}</div>
-              <div className="flex items-center space-x-2">
-                <div className="h-2 w-2 bg-cyan-500 rounded-full animate-pulse"></div>
-                <p className="text-sm text-gray-500">In progress</p>
+              <div className="flex items-baseline gap-1">
+                <div className="text-3xl font-bold text-orange-500">{statistics.readingStreak}</div>
+                <div className="text-lg text-gray-400">{statistics.readingStreak === 1 ? 'day' : 'days'}</div>
               </div>
             </div>
 
@@ -420,26 +419,50 @@ export default function Dashboard() {
                   <BookOpen className="h-5 w-5 text-cyan-600" />
                 </div>
                 {statistics.genreBreakdown.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={statistics.genreBreakdown as unknown as Record<string, number | string>[]}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        label={(data: any) => `${data.genre} ${data.percentage}%`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="count"
-                      >
-                        {statistics.genreBreakdown.map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <div className="flex flex-col items-center">
+                    <ResponsiveContainer width="100%" height={200}>
+                      <PieChart>
+                        <Pie
+                          data={statistics.genreBreakdown as unknown as Record<string, number | string>[]}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={50}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="count"
+                        >
+                          {statistics.genreBreakdown.map((_, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              const data = payload[0].payload as GenreStats;
+                              return (
+                                <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+                                  <p className="font-medium text-gray-900">{data.genre}</p>
+                                  <p className="text-sm text-gray-600">{data.count} {data.count === 1 ? 'book' : 'books'} ({data.percentage}%)</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="flex flex-wrap justify-center gap-3 mt-4">
+                      {statistics.genreBreakdown.slice(0, 6).map((genre, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                          />
+                          <span className="text-sm text-gray-600">{genre.genre}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 ) : (
                   <div className="h-[300px] flex flex-col items-center justify-center text-gray-400">
                     <div className="w-32 h-32 rounded-full border-8 border-gray-100 flex items-center justify-center mb-4">
@@ -452,67 +475,8 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Reading Streak & Top Books */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-              {/* Reading Streak Card */}
-              <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-200">
-                <div className="text-center mb-6">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-50 rounded-full mb-4">
-                    <Flame className="h-8 w-8 text-orange-500" />
-                  </div>
-                  <h4 className="font-bold text-xl text-gray-900 mb-2">Reading Streak</h4>
-                  <p className="text-sm text-gray-500">Consecutive days of reading</p>
-                </div>
-                
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-baseline gap-2">
-                    <span className="text-7xl font-bold text-orange-500 leading-none">{statistics.readingStreak}</span>
-                    <span className="text-2xl text-gray-400 font-medium">{statistics.readingStreak === 1 ? 'day' : 'days'}</span>
-                  </div>
-                </div>
-                
-                {statistics.readingStreak === 0 ? (
-                  <div className="space-y-4">
-                    <div className="text-center py-4">
-                      <p className="text-sm text-gray-600 mb-1">Start your reading journey</p>
-                      <p className="text-xs text-gray-500">Log your first reading session to begin!</p>
-                    </div>
-                    <button
-                      onClick={() => setShowCheckinModal(true)}
-                      className="w-full px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm"
-                    >
-                      <Plus className="h-5 w-5" />
-                      Log Today&apos;s Reading
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-center py-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm font-semibold text-gray-900 mb-1">
-                        {statistics.readingStreak >= 30 ? '🔥 Amazing!' : 
-                         statistics.readingStreak >= 14 ? '🌟 Excellent!' : 
-                         statistics.readingStreak >= 7 ? '✨ Great progress!' : 
-                         '💪 Keep going!'}
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        {statistics.readingStreak >= 30 ? 'You&apos;ve maintained a 30+ day streak!' : 
-                         statistics.readingStreak >= 14 ? 'Two weeks of consistent reading' : 
-                         statistics.readingStreak >= 7 ? 'One week milestone reached' : 
-                         'Building your reading habit'}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setShowCheckinModal(true)}
-                      className="w-full px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm"
-                    >
-                      <Plus className="h-5 w-5" />
-                      Log Today&apos;s Reading
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Top Rated Books */}
+            {/* Top Rated Books */}
+            <div className="mt-8">
               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-lg text-gray-900">Top Rated Books</h4>
