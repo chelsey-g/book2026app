@@ -68,6 +68,8 @@ export default function BookCard({ book, variant = 'list', onClick }: BookCardPr
           <BookCoverImage
             src={book.cover}
             isbn={book.isbn}
+            title={book.title}
+            author={book.author}
             alt={book.title}
             className="w-full h-full object-cover rounded-lg"
             placeholderClassName="w-12 h-18 bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg flex items-center justify-center shadow-sm"
