@@ -6,6 +6,7 @@ import { BookOpen, Star, Plus, TrendingUp, Users, Search, Filter, X, Sparkles, C
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Book {
   id?: string;
@@ -586,20 +587,16 @@ export default function DiscoverPage() {
                     {/* Front of card */}
                     <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100" style={{ backfaceVisibility: 'hidden' }}>
                     <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                      {book.coverUrl || book.cover_url ? (
-                        <img
-                          src={book.coverUrl || book.cover_url}
-                          alt={book.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="relative">
-                            <BookOpen className="h-16 w-16 text-gray-400" />
-                            <div className="absolute inset-0 bg-gray-200 rounded-full blur-xl"></div>
-                          </div>
-                        </div>
-                      )}
+                      <BookCoverImage
+                        src={book.coverUrl || book.cover_url}
+                        isbn={book.isbn}
+                        title={book.title}
+                        author={book.author}
+                        alt={book.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        placeholderClassName="w-full h-full flex items-center justify-center"
+                        iconClassName="h-16 w-16 text-gray-400"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
 
@@ -782,20 +779,16 @@ export default function DiscoverPage() {
                     {/* Front of card */}
                     <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100" style={{ backfaceVisibility: 'hidden' }}>
                     <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                      {book.coverUrl || book.cover_url ? (
-                        <img
-                          src={book.coverUrl || book.cover_url}
-                          alt={book.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="relative">
-                            <BookOpen className="h-16 w-16 text-gray-400" />
-                            <div className="absolute inset-0 bg-gray-200 rounded-full blur-xl"></div>
-                          </div>
-                        </div>
-                      )}
+                      <BookCoverImage
+                        src={book.coverUrl || book.cover_url}
+                        isbn={book.isbn}
+                        title={book.title}
+                        author={book.author}
+                        alt={book.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        placeholderClassName="w-full h-full flex items-center justify-center"
+                        iconClassName="h-16 w-16 text-gray-400"
+                      />
                       <div className="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
                         #{index + 1}
                       </div>
@@ -975,20 +968,16 @@ export default function DiscoverPage() {
                     {/* Front of card */}
                     <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 border border-gray-100" style={{ backfaceVisibility: 'hidden' }}>
                     <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                      {book.coverUrl ? (
-                        <img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="relative">
-                            <BookOpen className="h-20 w-20 text-gray-400" />
-                            <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full blur-2xl"></div>
-                          </div>
-                        </div>
-                      )}
+                      <BookCoverImage
+                        src={book.coverUrl}
+                        isbn={book.isbn}
+                        title={book.title}
+                        author={book.author}
+                        alt={book.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        placeholderClassName="w-full h-full flex items-center justify-center"
+                        iconClassName="h-20 w-20 text-gray-400"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
 

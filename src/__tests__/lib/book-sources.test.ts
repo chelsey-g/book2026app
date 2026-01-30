@@ -165,7 +165,7 @@ describe('Book Search Utilities', () => {
           title: 'Test Book',
           author: 'Unknown Author',
           isbn: undefined,
-          coverUrl: undefined,
+          coverUrl: null,
           publishedDate: undefined,
           pageCount: undefined,
           description: undefined,
@@ -236,7 +236,8 @@ describe('Book Search Utilities', () => {
         },
       };
 
-      mockedAxiosGet.mockResolvedValueOnce(googleResponse);
+      // First call: Google Books search. Second call: Open Library fallback cover search (no ISBN/cover).
+      mockedAxiosGet.mockResolvedValueOnce(googleResponse).mockResolvedValueOnce({ data: { docs: [] } });
 
       const result = await searchBooks('test query');
 
@@ -245,15 +246,12 @@ describe('Book Search Utilities', () => {
           title: 'Google Book',
           author: 'Google Author',
           isbn: undefined,
-          coverUrl: undefined,
+          coverUrl: null,
           publishedDate: undefined,
           pageCount: undefined,
           description: undefined,
         },
       ]);
-
-      // Should not call Open Library API
-      expect(mockedAxiosGet).toHaveBeenCalledTimes(1);
     });
 
     it('falls back to Open Library when Google Books returns no results', async () => {
@@ -276,7 +274,8 @@ describe('Book Search Utilities', () => {
 
       mockedAxiosGet
         .mockResolvedValueOnce(googleResponse)
-        .mockResolvedValueOnce(openLibraryResponse);
+        .mockResolvedValueOnce(openLibraryResponse)
+        .mockResolvedValueOnce({ data: { docs: [] } }); // fallback cover search
 
       const result = await searchBooks('test query');
 
@@ -292,8 +291,8 @@ describe('Book Search Utilities', () => {
         },
       ]);
 
-      // Should call both APIs
-      expect(mockedAxiosGet).toHaveBeenCalledTimes(2);
+      // Google Books search + Open Library search + fallback cover search
+      expect(mockedAxiosGet).toHaveBeenCalledTimes(3);
     });
 
     it('returns empty array when both APIs fail', async () => {

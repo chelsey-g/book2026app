@@ -28,6 +28,7 @@ interface Book {
   title: string;
   author: string;
   cover?: string;
+  isbn?: string;
   rating?: number;
   status: 'WANT_TO_READ' | 'CURRENTLY_READING' | 'READ';
   progress?: number;
@@ -169,6 +170,7 @@ export default function Dashboard() {
             title: b.books?.title || b.title,
             author: b.books?.author || b.author,
             cover: b.books?.cover_url || b.cover_url,
+            isbn: b.books?.isbn || b.isbn,
             rating: b.rating,
             status: b.status,
             progress: b.progress,

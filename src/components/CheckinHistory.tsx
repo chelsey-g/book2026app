@@ -1,6 +1,7 @@
 'use client';
 
 import { BookOpen, Calendar, Trash2 } from 'lucide-react';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Checkin {
   id: string;
@@ -110,17 +111,15 @@ export default function CheckinHistory({
                 className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors group"
               >
                 {/* Book Cover */}
-                {checkin.books?.cover_url ? (
-                  <img
-                    src={checkin.books.cover_url}
-                    alt={checkin.books.title}
-                    className="w-12 h-18 object-cover rounded-lg shadow-sm flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-12 h-18 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <BookOpen className="h-5 w-5 text-gray-400" />
-                  </div>
-                )}
+                <BookCoverImage
+                  src={checkin.books?.cover_url}
+                  title={checkin.books?.title}
+                  author={checkin.books?.author}
+                  alt={checkin.books?.title || ''}
+                  className="w-12 h-18 object-cover rounded-lg shadow-sm flex-shrink-0"
+                  placeholderClassName="w-12 h-18 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"
+                  iconClassName="h-5 w-5 text-gray-400"
+                />
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
