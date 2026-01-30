@@ -67,6 +67,7 @@ export default function BookCoverImage({
 
   const handleImgError = () => {
     if (!imgBroken) {
+      // Original src failed — try fallback
       setImgBroken(true);
       if ((isbn || title) && fetchKey !== currentKey) {
         setFetchKey(currentKey);
@@ -75,6 +76,9 @@ export default function BookCoverImage({
           .then(data => setFallbackUrl(data.coverUrl || null))
           .catch(() => setFallbackUrl(null));
       }
+    } else {
+      // Fallback image also failed — clear it so placeholder renders
+      setFallbackUrl(null);
     }
   };
 
