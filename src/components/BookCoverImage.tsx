@@ -38,7 +38,7 @@ export default function BookCoverImage({
   const [imgBroken, setImgBroken] = useState(false);
   const [fetchKey, setFetchKey] = useState<string | null>(null);
 
-  const currentKey = `${isbn || ''}|${title || ''}`;
+  const currentKey = `${isbn || ''}|${title || ''}|${author || ''}`;
 
   // Fetch fallback cover when there's no src (or src broke) and we have ISBN or title
   useEffect(() => {
