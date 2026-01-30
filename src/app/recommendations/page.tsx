@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Flame, Sparkles, Loader, BookOpen } from 'lucide-react';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Book {
   id: string;
@@ -92,17 +93,15 @@ export default function RecommendationsPage() {
                       className="group bg-white rounded-lg shadow-sm hover:shadow-lg border border-gray-200 overflow-hidden transition-all duration-300"
                     >
                       <div className="relative h-48 bg-gray-200 overflow-hidden">
-                        {book.cover_url || book.coverUrl ? (
-                          <img
-                            src={book.cover_url || book.coverUrl}
-                            alt={book.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-300">
-                            <BookOpen className="h-12 w-12 text-gray-400" />
-                          </div>
-                        )}
+                        <BookCoverImage
+                          src={book.cover_url || book.coverUrl}
+                          title={book.title}
+                          author={book.author}
+                          alt={book.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          placeholderClassName="w-full h-full flex items-center justify-center bg-gray-300"
+                          iconClassName="h-12 w-12 text-gray-400"
+                        />
                       </div>
                       <div className="p-4">
                         <h3 className="font-semibold text-gray-900 line-clamp-2 group-hover:text-[#018283]">{book.title}</h3>
@@ -150,17 +149,15 @@ export default function RecommendationsPage() {
                       className="group bg-white rounded-lg shadow-sm hover:shadow-lg border border-gray-200 overflow-hidden transition-all duration-300"
                     >
                       <div className="relative h-48 bg-gray-200 overflow-hidden">
-                        {book.cover_url || book.coverUrl ? (
-                          <img
-                            src={book.cover_url || book.coverUrl}
-                            alt={book.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-300">
-                            <BookOpen className="h-12 w-12 text-gray-400" />
-                          </div>
-                        )}
+                        <BookCoverImage
+                          src={book.cover_url || book.coverUrl}
+                          title={book.title}
+                          author={book.author}
+                          alt={book.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          placeholderClassName="w-full h-full flex items-center justify-center bg-gray-300"
+                          iconClassName="h-12 w-12 text-gray-400"
+                        />
                         <div className="absolute top-2 right-2 bg-orange-500 text-white px-2 py-1 rounded text-xs font-semibold">
                           #{index + 1}
                         </div>

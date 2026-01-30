@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BookOpen, Star, Plus, CheckCircle } from 'lucide-react';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Book {
   id: string;
@@ -310,17 +311,16 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Book Cover */}
           <div className="md:col-span-1">
-            {book.coverUrl ? (
-              <img
-                src={book.coverUrl}
-                alt={book.title}
-                className="w-full max-w-md mx-auto rounded-lg shadow-lg"
-              />
-            ) : (
-              <div className="w-full max-w-md mx-auto bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-                <BookOpen className="h-24 w-24 text-gray-400" />
-              </div>
-            )}
+            <BookCoverImage
+              src={book.coverUrl}
+              isbn={book.isbn}
+              title={book.title}
+              author={book.author}
+              alt={book.title}
+              className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+              placeholderClassName="w-full max-w-md mx-auto bg-gray-200 rounded-lg shadow-lg flex items-center justify-center aspect-[3/4]"
+              iconClassName="h-24 w-24 text-gray-400"
+            />
 
             {user && (
               <div className="mt-6 space-y-4">

@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { BookOpen, Star, Trash2, Edit2, Search, ChevronDown, BookMarked, Circle, CheckCircle, Clock, XCircle, Star as StarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Book {
   id: string;
@@ -415,17 +416,18 @@ export default function MyBooksPage() {
                            href={`/books/${userBook.books?.isbn || userBook.book_id}`}
                            className="text-[#018283] hover:underline font-medium flex items-center gap-3"
                          >
-                           {userBook.books?.cover_url ? (
-                             <img
-                               src={userBook.books.cover_url}
-                               alt={userBook.books.title}
+                           <div className="w-8 h-12 rounded overflow-hidden flex-shrink-0">
+                             <BookCoverImage
+                               src={userBook.books?.cover_url}
+                               isbn={userBook.books?.isbn}
+                               title={userBook.books?.title}
+                               author={userBook.books?.author}
+                               alt={userBook.books?.title || ''}
                                className="w-8 h-12 object-cover rounded"
+                               placeholderClassName="w-8 h-12 bg-gray-200 rounded flex items-center justify-center"
+                               iconClassName="w-4 h-4 text-gray-400"
                              />
-                           ) : (
-                             <div className="w-8 h-12 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
-                               <BookOpen className="w-4 h-4 text-gray-400" />
-                             </div>
-                           )}
+                           </div>
                            <span>{userBook.books?.title}</span>
                          </Link>
                        </td>

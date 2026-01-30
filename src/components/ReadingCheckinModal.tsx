@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, BookOpen, ChevronDown, Search, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Book {
   id: string;
@@ -247,17 +248,15 @@ export default function ReadingCheckinModal({
               >
                 {selectedBook ? (
                   <div className="flex items-center gap-3">
-                    {selectedBook.cover_url ? (
-                      <img
-                        src={selectedBook.cover_url}
-                        alt={selectedBook.title}
-                        className="w-8 h-12 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-8 h-12 bg-gray-200 rounded flex items-center justify-center">
-                        <BookOpen className="h-4 w-4 text-gray-400" />
-                      </div>
-                    )}
+                    <BookCoverImage
+                      src={selectedBook.cover_url}
+                      title={selectedBook.title}
+                      author={selectedBook.author}
+                      alt={selectedBook.title}
+                      className="w-8 h-12 object-cover rounded"
+                      placeholderClassName="w-8 h-12 bg-gray-200 rounded flex items-center justify-center"
+                      iconClassName="h-4 w-4 text-gray-400"
+                    />
                     <div className="min-w-0">
                       <p className="font-medium text-gray-900 truncate">{selectedBook.title}</p>
                       <p className="text-sm text-gray-500 truncate">{selectedBook.author}</p>
@@ -353,17 +352,15 @@ export default function ReadingCheckinModal({
                             }}
                             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-0"
                           >
-                            {book.cover_url ? (
-                              <img
-                                src={book.cover_url}
-                                alt={book.title}
-                                className="w-8 h-12 object-cover rounded"
-                              />
-                            ) : (
-                              <div className="w-8 h-12 bg-gray-200 rounded flex items-center justify-center">
-                                <BookOpen className="h-4 w-4 text-gray-400" />
-                              </div>
-                            )}
+                            <BookCoverImage
+                              src={book.cover_url}
+                              title={book.title}
+                              author={book.author}
+                              alt={book.title}
+                              className="w-8 h-12 object-cover rounded"
+                              placeholderClassName="w-8 h-12 bg-gray-200 rounded flex items-center justify-center"
+                              iconClassName="h-4 w-4 text-gray-400"
+                            />
                             <div className="min-w-0 flex-1">
                               <p className="font-medium text-gray-900 truncate">{book.title}</p>
                               <p className="text-sm text-gray-500 truncate">{book.author}</p>

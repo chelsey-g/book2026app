@@ -1,10 +1,14 @@
+'use client';
+
 import { BookOpen, Star } from 'lucide-react';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface Book {
   id: string;
   title: string;
   author: string;
   cover?: string;
+  isbn?: string;
   rating?: number;
   status: 'WANT_TO_READ' | 'CURRENTLY_READING' | 'READ' | 'DNF';
   progress?: number;
@@ -21,15 +25,19 @@ export default function BookCard({ book, variant = 'list', onClick }: BookCardPr
     return (
       <div onClick={onClick} className="group cursor-pointer">
         <div className="relative mb-3 overflow-hidden rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
-          {book.cover ? (
-            <div className="aspect-[3/4] bg-gray-200 flex items-center justify-center">
-              <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
-            </div>
-          ) : (
-            <div data-testid="book-placeholder" className="aspect-[3/4] bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-              <BookOpen className="h-8 w-8 text-white/60" />
-            </div>
-          )}
+          <div className="aspect-[3/4] bg-gray-200 flex items-center justify-center">
+            <BookCoverImage
+              src={book.cover}
+              isbn={book.isbn}
+              title={book.title}
+              author={book.author}
+              alt={book.title}
+              className="w-full h-full object-cover"
+              placeholderClassName="aspect-[3/4] w-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center"
+              placeholderTestId="book-placeholder"
+              iconClassName="h-8 w-8 text-white/60"
+            />
+          </div>
         </div>
         <h4 className="font-medium text-gray-900 text-sm line-clamp-2 mb-1">
           {book.title}
@@ -56,18 +64,20 @@ export default function BookCard({ book, variant = 'list', onClick }: BookCardPr
   return (
     <div onClick={onClick} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer border border-gray-200">
       <div className="flex-shrink-0 relative">
-        {book.cover ? (
-          <div className="w-12 h-18 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm">
-            <img src={book.cover} alt={book.title} className="w-full h-full object-cover rounded-lg" />
-          </div>
-        ) : (
-          <div data-testid="book-placeholder-list" className="w-12 h-18 bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg flex items-center justify-center shadow-sm">
-            <BookOpen className="h-6 w-6 text-white/80" />
-          </div>
-        )}
+        <div className="w-12 h-18 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm">
+          <BookCoverImage
+            src={book.cover}
+            isbn={book.isbn}
+            alt={book.title}
+            className="w-full h-full object-cover rounded-lg"
+            placeholderClassName="w-12 h-18 bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg flex items-center justify-center shadow-sm"
+            placeholderTestId="book-placeholder-list"
+            iconClassName="h-6 w-6 text-white/80"
+          />
+        </div>
         {book.status === 'CURRENTLY_READING' && book.progress && (
           <div className="absolute -bottom-1 left-0 right-0 h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-teal-600 rounded-full transition-all duration-300"
               style={{ width: `${book.progress}%` }}
             />

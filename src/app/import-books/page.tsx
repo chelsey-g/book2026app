@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Upload, CheckCircle2, XCircle, Loader, BookOpen, Download } from 'lucide-react';
+import BookCoverImage from '@/components/BookCoverImage';
 
 interface ParsedBook {
   name: string;
@@ -372,17 +373,15 @@ export default function ImportBooksPage() {
                 >
                   <div className="flex gap-3">
                     <div className="flex-shrink-0 w-16">
-                      {book.coverUrl ? (
-                        <img
-                          src={book.coverUrl}
-                          alt={book.name}
-                          className="w-16 h-24 object-cover rounded"
-                        />
-                      ) : (
-                        <div className="w-16 h-24 bg-gray-200 rounded flex items-center justify-center">
-                          <BookOpen className="w-6 h-6 text-gray-400" />
-                        </div>
-                      )}
+                      <BookCoverImage
+                        src={book.coverUrl}
+                        title={book.name}
+                        author={book.author}
+                        alt={book.name}
+                        className="w-16 h-24 object-cover rounded"
+                        placeholderClassName="w-16 h-24 bg-gray-200 rounded flex items-center justify-center"
+                        iconClassName="w-6 h-6 text-gray-400"
+                      />
                     </div>
 
                     <div className="flex-1 min-w-0">
